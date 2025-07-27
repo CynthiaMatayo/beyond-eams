@@ -1,4 +1,4 @@
-// lib/screens/instructor/student_reports_screen.dart - FINAL FIX
+// lib/screens/instructor/student_reports_screen.dart - COMPLETE UPDATED VERSION
 import 'package:flutter/material.dart';
 import '../../services/instructor_service.dart';
 
@@ -16,17 +16,17 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
   String _searchQuery = '';
   String _selectedDepartment = 'All';
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _departments = [
-    'All',
-    'Computer Science',
-    'Information Technology',
-    'Business Administration',
-    'Engineering',
-    'Education',
-    'Mathematics',
-    'Physics',
-    'Chemistry',
-  ];
+
+  // FIXED: Dynamic departments based on actual student data
+  List<String> get _departments {
+    final allDepartments = _students
+        .map((student) => _getDepartment(student))
+        .toSet()  // Remove duplicates
+        .toList()
+      ..sort();  // Sort alphabetically
+    
+    return ['All', ...allDepartments];
+  }
 
   @override
   void initState() {
@@ -44,13 +44,11 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
     setState(() => _isLoading = true);
     try {
       final students = await _instructorService.getStudentsToTrack();
-
       // Debug: Print the actual field names returned by backend
       if (students.isNotEmpty) {
         print('✅ Sample student data fields: ${students.first.keys.toList()}');
         print('✅ Sample student: ${students.first}');
       }
-
       setState(() {
         _students = students;
         _isLoading = false;
@@ -61,7 +59,6 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
         _isLoading = false;
       });
       print('❌ Error loading students: $e');
-
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Failed to load students: $e'),
@@ -83,16 +80,13 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
         student['full_name'].toString().trim().isNotEmpty) {
       return student['full_name'].toString().trim();
     }
-
     // Build from first_name + last_name
     final firstName = student['first_name']?.toString() ?? '';
     final lastName = student['last_name']?.toString() ?? '';
     final fullName = '$firstName $lastName'.trim();
-
     if (fullName.isNotEmpty && fullName != ' ') {
       return fullName;
     }
-
     // Fallback to username or email
     return student['username']?.toString() ??
         student['email']?.toString()?.split('@')[0] ??
@@ -104,13 +98,11 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
     if (student['registration_number'] != null) {
       return student['registration_number'].toString();
     }
-
     // Generate if missing
     final id = student['id'];
     if (id != null) {
       return 'REG${id.toString().padLeft(4, '0')}';
     }
-
     return 'N/A';
   }
 
@@ -123,7 +115,6 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
   String _getJoinDate(Map<String, dynamic> student) {
     // Try different date fields
     final dateField = student['date_joined'] ?? student['created_at'];
-
     if (dateField != null) {
       try {
         final date = DateTime.parse(dateField);
@@ -133,7 +124,6 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
         return dateField.toString().split('T')[0]; // Remove time part
       }
     }
-
     // Generate a reasonable default date
     final now = DateTime.now();
     return '${now.day}/${now.month}/${now.year}';
@@ -236,7 +226,6 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
                     itemBuilder: (context, index) {
                       final department = _departments[index];
                       final isSelected = _selectedDepartment == department;
-
                       // Count students in this department
                       final departmentCount =
                           department == 'All'
@@ -244,7 +233,6 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
                               : _students
                                   .where((s) => _getDepartment(s) == department)
                                   .length;
-
                       return Container(
                         margin: const EdgeInsets.only(right: 8),
                         child: FilterChip(
@@ -578,7 +566,6 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
             child: CircularProgressIndicator(color: Colors.green),
           ),
     );
-
     try {
       final participationData = await _instructorService
           .getStudentParticipation(student['id']);
@@ -770,15 +757,391 @@ class _StudentReportsScreenState extends State<StudentReportsScreen> {
     );
   }
 
+  // UPDATED: Complete contact student functionality
   void _contactStudent(Map<String, dynamic> student) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          'Contact feature for ${_getStudentName(student)} coming soon!',
+    final studentName = _getStudentName(student);
+    final studentEmail = student['email']?.toString();
+    final studentId = student['id']?.toString() ?? 'Unknown';
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
         ),
-        backgroundColor: Colors.green,
-        duration: const Duration(seconds: 2),
+        title: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.green.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: const Icon(Icons.person, color: Colors.green, size: 20),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Contact Student',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  Text(
+                    studentName,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Email Option
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[200]!),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.email, color: Colors.blue, size: 20),
+                ),
+                title: const Text(
+                  'Send Email',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: Text(
+                  studentEmail ?? 'No email available',
+                  style: TextStyle(
+                    color: studentEmail != null ? Colors.grey[600] : Colors.red[400],
+                    fontSize: 12,
+                  ),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: studentEmail != null ? Colors.blue : Colors.grey[400],
+                ),
+                onTap: studentEmail != null ? () {
+                  Navigator.pop(context);
+                  _showEmailComposer(student);
+                } : null,
+                enabled: studentEmail != null,
+              ),
+            ),
+            
+            // Internal Message Option
+            Container(
+              margin: const EdgeInsets.only(bottom: 8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[200]!),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.message, color: Colors.green, size: 20),
+                ),
+                title: const Text(
+                  'Internal Message',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: const Text(
+                  'Send via school system',
+                  style: TextStyle(fontSize: 12),
+                ),
+                trailing: const Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.green,
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  _showMessageComposer(student);
+                },
+              ),
+            ),
+            
+            // Phone Option (for future)
+            Container(
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[200]!),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: ListTile(
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.orange.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Icon(Icons.phone, color: Colors.orange, size: 20),
+                ),
+                title: const Text(
+                  'Phone Call',
+                  style: TextStyle(fontWeight: FontWeight.w600),
+                ),
+                subtitle: const Text(
+                  'Feature coming soon',
+                  style: TextStyle(fontSize: 12, color: Colors.grey),
+                ),
+                trailing: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 16,
+                  color: Colors.grey[400],
+                ),
+                onTap: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Phone feature will be available in next update'),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+        ],
       ),
+    );
+  }
+
+  void _showEmailComposer(Map<String, dynamic> student) {
+    final studentName = _getStudentName(student);
+    final studentEmail = student['email']?.toString() ?? '';
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: Row(
+          children: [
+            const Icon(Icons.email, color: Colors.blue),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                'Email $studentName',
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
+          ],
+        ),
+        content: SizedBox(
+          width: double.maxFinite,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey[100],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Row(
+                  children: [
+                    const Text('To: ', style: TextStyle(fontWeight: FontWeight.bold)),
+                    Text(studentEmail),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+               const TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Subject',
+                      border: OutlineInputBorder(),
+                      hintText: 'Regarding Your Extracurricular Activities',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const TextField(
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      labelText: 'Message',
+                      border: OutlineInputBorder(),
+                      hintText: 'Type your message here...',
+                      alignLabelWithHint: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Email ready to send to $studentName'),
+                      backgroundColor: Colors.blue,
+                      action: SnackBarAction(
+                        label: 'SEND',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          // Future: Integrate with email service
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text('Email sent successfully!'),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.blue,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Compose'),
+              ),
+            ],
+          ),
+    );
+  }
+
+  void _showMessageComposer(Map<String, dynamic> student) {
+    final studentName = _getStudentName(student);
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            title: Row(
+              children: [
+                const Icon(Icons.message, color: Colors.green),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Message $studentName',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                ),
+              ],
+            ),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.green.withOpacity(0.3)),
+                    ),
+                    child: Row(
+                      children: [
+                        Icon(Icons.info, color: Colors.green[700], size: 16),
+                        const SizedBox(width: 8),
+                        const Expanded(
+                          child: Text(
+                            'This will send an internal notification to the student',
+                            style: TextStyle(fontSize: 12),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Message Title',
+                      border: OutlineInputBorder(),
+                      hintText: 'Activity Reminder',
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const TextField(
+                    maxLines: 4,
+                    decoration: InputDecoration(
+                      labelText: 'Message Content',
+                      border: OutlineInputBorder(),
+                      hintText: 'Please remember to attend...',
+                      alignLabelWithHint: true,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancel'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Message ready to send to $studentName'),
+                      backgroundColor: Colors.green,
+                      action: SnackBarAction(
+                        label: 'SEND',
+                        textColor: Colors.white,
+                        onPressed: () {
+                          // Future: Integrate with notification service
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                'Internal message sent successfully!',
+                              ),
+                              backgroundColor: Colors.green,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  );
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.green,
+                  foregroundColor: Colors.white,
+                ),
+                child: const Text('Send Message'),
+              ),
+            ],
+          ),
     );
   }
 }

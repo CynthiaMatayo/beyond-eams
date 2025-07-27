@@ -285,6 +285,14 @@ class ApiService {
     final result = await _handleResponse(response);
     return result['results'] ?? result;
   }
+  Future<List<dynamic>> getCoordinatorActivities() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/api/coordinator/activities/'),
+      headers: await _getHeaders(),
+    );
+    final result = await _handleResponse(response);
+    return result is List ? result : (result['results'] ?? result);
+  }
 
   Future<Map<String, dynamic>> getUserVolunteeringRecord(int userId) async {
     final response = await http.get(

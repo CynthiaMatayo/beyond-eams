@@ -232,7 +232,7 @@ def list_users(request):
 @permission_classes([IsAuthenticated])
 @admin_required
 def admin_dashboard_stats(request):
-    """Get admin dashboard statistics"""
+    """Get admin dashboard statistics with REAL recent activities"""
     try:
         # Calculate time ranges
         now = timezone.now()
@@ -244,45 +244,92 @@ def admin_dashboard_stats(request):
             date_joined__gte=this_month_start
         ).count()
         
-        # Get activity statistics (will need to import Activity model when ready)
+        # Get activity statistics
         try:
-            from activities.models import Activity
+            from activities.models import Activity, Enrollment
             active_activities = Activity.objects.filter(
-                status__in=['upcoming', 'ongoing']
+                start_time__lte=now,
+                end_time__gte=now
             ).count()
             upcoming_activities = Activity.objects.filter(
-                status='upcoming',
-                start_time__gte=now
+                start_time__gt=now
             ).count()
         except ImportError:
             active_activities = 0
             upcoming_activities = 0
         
-        # Simple system health calculation
-        system_health = 98  # Can be made dynamic based on various factors
+        # 🔧 GET REAL RECENT ACTIVITIES FROM DATABASE
+        recent_activities = []
         
-        # Mock pending issues for now
-        pending_issues = 3
+        # Get recent user registrations
+        recent_users = User.objects.filter(
+            date_joined__gte=now - timedelta(days=7)
+        ).order_by('-date_joined')[:3]
         
-        # Get recent activities (simplified for now)
-        recent_activities = [
-            {
-                'id': '1',
+        for user in recent_users:
+            recent_activities.append({
+                'id': f'user_{user.id}',
                 'type': 'user_created',
-                'description': f'New user registered: {User.objects.last().username if User.objects.exists() else "N/A"}',
-                'timestamp': (now - timedelta(hours=2)).isoformat(),
-                'user_id': str(User.objects.last().id) if User.objects.exists() else None,
-                'user_name': f'{User.objects.last().first_name} {User.objects.last().last_name}' if User.objects.exists() else None,
-            },
-            {
-                'id': '2',
+                'description': f'New user registered: {user.first_name} {user.last_name}' if user.first_name else f'New user: {user.username}',
+                'timestamp': user.date_joined.isoformat(),
+                'user_id': str(user.id),
+                'user_name': f'{user.first_name} {user.last_name}' if user.first_name else user.username,
+            })
+        
+        # Get recent activities created
+        try:
+            recent_created_activities = Activity.objects.filter(
+                created_at__gte=now - timedelta(days=7)
+            ).order_by('-created_at')[:3]
+            
+            for activity in recent_created_activities:
+                recent_activities.append({
+                    'id': f'activity_{activity.id}',
+                    'type': 'activity_created',
+                    'description': f'New activity created: {activity.title}',
+                    'timestamp': activity.created_at.isoformat(),
+                    'user_id': str(activity.created_by.id) if activity.created_by else None,
+                    'user_name': activity.created_by.get_full_name() if activity.created_by else 'System',
+                })
+        except:
+            pass
+        
+        # Get recent enrollments
+        try:
+            recent_enrollments = Enrollment.objects.filter(
+                enrolled_at__gte=now - timedelta(days=7)
+            ).select_related('user', 'activity').order_by('-enrolled_at')[:2]
+            
+            for enrollment in recent_enrollments:
+                recent_activities.append({
+                    'id': f'enrollment_{enrollment.id}',
+                    'type': 'user_enrolled',
+                    'description': f'{enrollment.user.get_full_name() or enrollment.user.username} enrolled in {enrollment.activity.title}',
+                    'timestamp': enrollment.enrolled_at.isoformat(),
+                    'user_id': str(enrollment.user.id),
+                    'user_name': enrollment.user.get_full_name() or enrollment.user.username,
+                })
+        except:
+            pass
+        
+        # Add system events if no real activities
+        if not recent_activities:
+            recent_activities.append({
+                'id': 'system_1',
                 'type': 'system_event',
-                'description': 'System backup completed successfully',
-                'timestamp': (now - timedelta(hours=5)).isoformat(),
+                'description': 'System running smoothly - no recent activities',
+                'timestamp': now.isoformat(),
                 'user_id': None,
                 'user_name': 'System',
-            },
-        ]
+            })
+        
+        # Sort by timestamp (most recent first)
+        recent_activities.sort(key=lambda x: x['timestamp'], reverse=True)
+        recent_activities = recent_activities[:5]  # Keep only 5 most recent
+        
+        # Simple system health calculation
+        system_health = 98  # Can be made dynamic based on various factors
+        pending_issues = 0  # Calculate real pending issues if needed
         
         return Response({
             'total_users': total_users,
@@ -295,6 +342,9 @@ def admin_dashboard_stats(request):
         }, status=200)
         
     except Exception as e:
+        import traceback
+        print(f"Dashboard stats error: {str(e)}")
+        print(traceback.format_exc())
         return Response(
             {'error': f'Failed to load dashboard stats: {str(e)}'},
             status=500
@@ -602,3 +652,127 @@ def admin_create_backup(request):
             {'error': f'Failed to create backup: {str(e)}'},
             status=500
         )
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
+def admin_get_role_requests(request):
+    """Get pending role requests"""
+    try:
+        # Mock role requests for now - replace with actual model later
+        role_requests = [
+            {
+                'id': '1',
+                'user_id': '2',
+                'user_name': 'John Doe',
+                'user_email': 'john@example.com',
+                'current_role': 'student',
+                'requested_role': 'coordinator',
+                'reason': 'I want to organize activities for my department',
+                'request_date': timezone.now().isoformat(),
+                'status': 'pending'
+            }
+        ]
+        
+        return Response({
+            'requests': role_requests
+        }, status=200)
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to load role requests: {str(e)}'},
+            status=500
+        )
+    
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
+def admin_get_role_requests(request):
+    """Get pending role requests"""
+    try:
+        # Mock role requests for now
+        role_requests = [
+            {
+                'id': 1,
+                'user_id': 2,
+                'user_name': 'John Doe',
+                'user_email': 'john@example.com',
+                'current_role': 'student',
+                'requested_role': 'coordinator',
+                'reason': 'I want to organize activities',
+                'request_date': timezone.now().isoformat(),
+                'status': 'pending'
+            }
+        ]
+        
+        return Response({'requests': role_requests}, status=200)
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to load role requests: {str(e)}'},
+            status=500
+        )
+    
+# ADD TO backend/accounts/views.py
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+@admin_required
+def admin_get_system_reports(request):
+    """Get comprehensive system reports"""
+    try:
+        # Get basic stats
+        total_users = User.objects.count()
+        this_month_start = timezone.now().replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+        new_users_this_month = User.objects.filter(date_joined__gte=this_month_start).count()
+        
+        # Try to get activity stats
+        try:
+            from activities.models import Activity, Enrollment
+            total_activities = Activity.objects.count()
+            active_activities = Activity.objects.filter(
+                start_time__lte=timezone.now(),
+                end_time__gte=timezone.now()
+            ).count()
+        except ImportError:
+            total_activities = 0
+            active_activities = 0
+        
+        # System performance metrics (mock for now)
+        system_report = {
+            'total_users': total_users,
+            'new_users_this_month': new_users_this_month,
+            'total_activities': total_activities,
+            'active_activities': active_activities,
+            'system_health': 98,
+            'pending_issues': 0,
+            'system_uptime': 99.9,
+            'storage_used': 12.4,
+            'storage_total': 50.0,
+            'cpu_usage': 23,
+            'memory_usage': 67,
+            'network_status': 95,
+            'response_time': 145,
+            'db_queries': 342,
+            'error_rate': 0.1,
+            'active_sessions': 127,
+            'recent_activities': [
+                {
+                    'id': '1',
+                    'type': 'user_created',
+                    'description': 'New user registered',
+                    'timestamp': timezone.now().isoformat(),
+                    'user_id': None,
+                    'user_name': 'System',
+                }
+            ]
+        }
+        
+        return Response(system_report, status=200)
+        
+    except Exception as e:
+        return Response(
+            {'error': f'Failed to load system reports: {str(e)}'},
+            status=500
+        )
+    

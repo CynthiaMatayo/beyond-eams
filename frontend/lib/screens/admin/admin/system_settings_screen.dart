@@ -1,6 +1,8 @@
 // lib/screens/admin/system_settings_screen.dart
 import 'package:flutter/material.dart';
 import 'package:frontend/services/admin_service.dart';
+import 'package:frontend/widgets/admin_bottom_nav_bar.dart';
+import 'package:frontend/models/user.dart';
 
 class SystemSettingsScreen extends StatefulWidget {
   const SystemSettingsScreen({super.key});
@@ -322,6 +324,7 @@ class _SystemSettingsScreenState extends State<SystemSettingsScreen> {
                   ],
                 ),
               ),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 4),
     );
   }
 

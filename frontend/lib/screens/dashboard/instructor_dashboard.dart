@@ -1,5 +1,6 @@
-// lib/screens/dashboard/instructor_dashboard.dart - FINAL FIXES
+// lib/screens/dashboard/instructor_dashboard.dart - FINAL COMPLETE FIX
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/notification_bell.dart';
 import 'package:frontend/widgets/qr_code_generator.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
@@ -43,7 +44,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
       await Future.wait([
         _loadActivitiesFromProvider(),
         _loadStudentsToTrack(),
-        _loadRealTimePendingApprovals(), // FIXED: Real-time pending approvals
+        _loadRealTimePendingApprovals(),
       ]);
       _calculateThisMonthActivities();
     } catch (e) {
@@ -80,17 +81,14 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     }
   }
 
-  // FIXED: Real-time pending approvals from actual volunteer applications
   Future<void> _loadRealTimePendingApprovals() async {
     try {
-      // Method 1: Try to get from VolunteerProvider first
       final volunteerProvider = Provider.of<VolunteerProvider>(context, listen: false);
       
       if (!volunteerProvider.isInitialized) {
         await volunteerProvider.initialize();
       }
       
-      // Load real pending applications from backend
       await volunteerProvider.loadPendingApplications();
       final pendingApplications = volunteerProvider.pendingApplications;
       
@@ -102,7 +100,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
         return;
       }
       
-      // Method 2: Fallback to InstructorService
       final pendingFromService = await _instructorService.getPendingVolunteerApplications();
       setState(() {
         _pendingApprovals = pendingFromService.length;
@@ -112,7 +109,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     } catch (e) {
       debugPrint('❌ INSTRUCTOR_DASHBOARD: Error loading real-time pending approvals: $e');
       
-      // Method 3: Direct API call as last resort
       try {
         final directPendingCount = await _instructorService.getDirectPendingCount();
         setState(() {
@@ -128,12 +124,10 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     }
   }
 
-// FIXED: Load students with REAL UEAB departments (no mock data)
   Future<void> _loadStudentsToTrack() async {
     try {
       final studentsData = await _instructorService.getStudentsToTrack();
       
-      // Real departments from University of Eastern Africa, Baraton
       final departments = [
         'Accounting',
         'Biological Sciences and Agriculture',
@@ -153,17 +147,14 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
       setState(() {
         _studentsToTrack = studentsData
             .map((studentData) {
-              // FIXED: Ensure department is never N/A - use real university departments
               String department = studentData['department']?.toString() ?? '';
               if (department.isEmpty || 
                   department.toLowerCase() == 'n/a' || 
                   department.toLowerCase() == 'null' ||
                   department.toLowerCase() == 'none') {
-                // Use actual university department based on student ID
                 department = departments[int.parse(studentData['id']?.toString() ?? '0') % departments.length];
               }
               
-              // FIXED: Ensure role is never N/A
               String role = studentData['role']?.toString() ?? 'student';
               if (role.isEmpty || 
                   role.toLowerCase() == 'n/a' || 
@@ -171,7 +162,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
                 role = 'student';
               }
               
-              // FIXED: Ensure registration number is never N/A
               String regNumber = studentData['registration_number']?.toString() ?? '';
               if (regNumber.isEmpty || 
                   regNumber.toLowerCase() == 'n/a' || 
@@ -179,7 +169,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
                 regNumber = 'REG${studentData['id']?.toString().padLeft(4, '0')}';
               }
               
-              // FIXED: Ensure names are never N/A
               String firstName = studentData['first_name']?.toString() ?? '';
               if (firstName.isEmpty || 
                   firstName.toLowerCase() == 'n/a' || 
@@ -210,11 +199,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
       });
       
       debugPrint('✅ INSTRUCTOR_DASHBOARD: Loaded ${_studentsToTrack.length} students with real UEAB departments');
-      
-      // Debug: Show first few students to verify real department names
-      for (var student in _studentsToTrack.take(3)) {
-        debugPrint('Student: ${student.fullName}, Dept: ${student.department}, Role: ${student.role}, Reg: ${student.registrationNumber}');
-      }
       
     } catch (e) {
       debugPrint('❌ INSTRUCTOR_DASHBOARD: Error loading students: $e');
@@ -266,7 +250,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
         automaticallyImplyLeading: false,
         elevation: 0,
         actions: [
-          // REMOVED: Notification count badge from top (as requested)
+          const NotificationBell(),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadDashboardData,
@@ -298,6 +282,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
                     child: Text('Please log in to continue'),
                   );
                 }
+
                 return RefreshIndicator(
                   onRefresh: _loadDashboardData,
                   child: SingleChildScrollView(
@@ -310,7 +295,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
                         const SizedBox(height: 24),
                         _buildQuickStats(),
                         const SizedBox(height: 24),
-                        // FIXED: Real-time pending applications alert
                         if (_pendingApprovals > 0) ...[
                           _buildRealTimePendingApprovalsAlert(),
                           const SizedBox(height: 24),
@@ -320,6 +304,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
                         _buildRecentActivities(),
                         const SizedBox(height: 24),
                         _buildStudentsOverview(),
+                        const SizedBox(height: 24),
                       ],
                     ),
                   ),
@@ -329,20 +314,55 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     );
   }
 
-  // FIXED: Real-time pending applications alert
+// ✅ FIXED: Better UI for pending applications alert
   Widget _buildRealTimePendingApprovalsAlert() {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.orange.shade50,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.orange.shade200),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.orange.shade50,
+            Colors.orange.shade100.withOpacity(0.7),
+          ],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: Colors.orange.shade300.withOpacity(0.5),
+          width: 1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.orange.withOpacity(0.1),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
-          Icon(Icons.pending_actions, color: Colors.orange.shade700, size: 24),
-          const SizedBox(width: 12),
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.orange,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.orange.withOpacity(0.3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: const Icon(
+              Icons.pending_actions,
+              color: Colors.white,
+              size: 24,
+            ),
+          ),
+          const SizedBox(width: 16),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -351,29 +371,38 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
                   'Pending Volunteer Applications',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
-                    color: Colors.orange.shade700,
+                    color: Colors.orange.shade800,
                     fontSize: 16,
                   ),
                 ),
-                const SizedBox(height: 4),
+                const SizedBox(height: 6),
                 Text(
-                  '$_pendingApprovals real application${_pendingApprovals > 1 ? 's' : ''} from students waiting for your review',
+                  '$_pendingApprovals volunteer application${_pendingApprovals > 1 ? 's' : ''} from students waiting for your review',
                   style: TextStyle(
-                    color: Colors.orange.shade600,
+                    color: Colors.orange.shade700,
                     fontSize: 14,
+                    height: 1.3,
                   ),
                 ),
               ],
             ),
           ),
+          const SizedBox(width: 12),
           ElevatedButton(
             onPressed: _showVolunteerApprovals,
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.orange,
               foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              elevation: 2,
             ),
-            child: const Text('Review Now', style: TextStyle(fontSize: 12)),
+            child: const Text(
+              'Review Now',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
           ),
         ],
       ),
@@ -681,6 +710,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
 
   Widget _buildRecentActivities() {
     final recentActivities = _assignedActivities.take(3).toList();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -721,14 +751,13 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
             ),
           )
         else
-          ...recentActivities.map((activity) => _buildActivityCard(activity)),
+          ...recentActivities.map((activity) => _buildRecentActivityCard(activity)),
       ],
     );
   }
 
-// REPLACE your _buildActivityCard method with this fixed version:
-
-  Widget _buildActivityCard(Activity activity) {
+  // ✅ CLEAN: Recent Activities card WITHOUT VOLUNTEER/REGULAR badges
+  Widget _buildRecentActivityCard(Activity activity) {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.all(16),
@@ -748,10 +777,9 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color:
-                  activity.isVolunteering
-                      ? Colors.orange.withOpacity(0.1)
-                      : Colors.blue.withOpacity(0.1),
+              color: activity.isVolunteering
+                  ? Colors.orange.withOpacity(0.1)
+                  : Colors.blue.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(
@@ -765,20 +793,13 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    Expanded(
-                      child: Text(
-                        activity.title,
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    // FIXED: Proper activity type badge
-                    _buildActivityTypeBadge(activity.isVolunteering),
-                  ],
+                // ✅ NO BADGES: Clean title without badges
+                Text(
+                  activity.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -826,25 +847,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     );
   }
 
-  // ADD this new method to build activity type badges:
-  Widget _buildActivityTypeBadge(bool isVolunteering) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: isVolunteering ? Colors.orange : Colors.blue,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        isVolunteering ? 'VOLUNTEER' : 'REGULAR',
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 10,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
-
   Widget _buildStatusBadge(String status) {
     Color color;
     switch (status.toLowerCase()) {
@@ -860,6 +862,7 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
       default:
         color = Colors.grey;
     }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -877,7 +880,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     );
   }
 
-  // FIXED: Students Overview without the sample section
   Widget _buildStudentsOverview() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -930,7 +932,6 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
             ],
           ),
         ),
-        // REMOVED: Sample students section as requested
       ],
     );
   }
@@ -969,61 +970,63 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.7,
-        minChildSize: 0.5,
-        maxChildSize: 0.9,
-        builder: (context, scrollController) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          child: Column(
-            children: [
-              Container(
-                width: 40,
-                height: 4,
-                margin: const EdgeInsets.only(top: 12),
-                decoration: BoxDecoration(
-                  color: Colors.grey[300],
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      'Generate QR Codes',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
+      builder:
+          (context) => DraggableScrollableSheet(
+            initialChildSize: 0.7,
+            minChildSize: 0.5,
+            maxChildSize: 0.9,
+            builder:
+                (context, scrollController) => Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: 40,
+                        height: 4,
+                        margin: const EdgeInsets.only(top: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
-                    ),
-                    IconButton(
-                      onPressed: () => Navigator.pop(context),
-                      icon: const Icon(Icons.close),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: _assignedActivities.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Icon(
-                              Icons.qr_code_scanner,
-                              size: 64,
-                              color: Colors.grey[400],
+                            const Text(
+                              'Generate QR Codes',
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                            
-                            const SizedBox(height: 16),
+                            IconButton(
+                              onPressed: () => Navigator.pop(context),
+                              icon: const Icon(Icons.close),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Expanded(
+                        child:
+                            _assignedActivities.isEmpty
+                                ? Center(
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Icon(
+                                        Icons.qr_code_scanner,
+                                        size: 64,
+                                        color: Colors.grey[400],
+                                      ),
+                                      const SizedBox(height: 16),
                                       Text(
                                         'No Activities Available',
                                         style: TextStyle(
@@ -1554,214 +1557,3 @@ class _InstructorDashboardState extends State<InstructorDashboard> {
     }
   }
 }
-
-// Helper Extensions
-extension InstructorDashboardHelpers on _InstructorDashboardState {
-  List<Activity> get activitiesNeedingAttention {
-    return _assignedActivities.where((activity) {
-      final daysUntilStart =
-          activity.startTime.difference(DateTime.now()).inDays;
-      return daysUntilStart <= 7 && activity.enrolledCount < 5;
-    }).toList();
-  }
-
-  List<Activity> get volunteerActivitiesNeedingApproval {
-    return _assignedActivities
-        .where(
-          (activity) =>
-              activity.isVolunteering && activity.status == 'upcoming',
-        )
-        .toList();
-  }
-
-  double get workloadScore {
-    final upcomingActivities =
-        _assignedActivities.where((a) => a.status == 'upcoming').length;
-    final studentsToTrack = _studentsToTrack.length;
-    final pendingWork = _pendingApprovals;
-    return (upcomingActivities * 0.3 +
-        studentsToTrack * 0.1 +
-        pendingWork * 0.6);
-  }
-
-  String get workloadStatus {
-    final score = workloadScore;
-    if (score < 5) return 'Light';
-    if (score < 15) return 'Moderate';
-    if (score < 30) return 'Heavy';
-    return 'Overloaded';
-  }
-
-  Color get workloadColor {
-    final score = workloadScore;
-    if (score < 5) return Colors.green;
-    if (score < 15) return Colors.blue;
-    if (score < 30) return Colors.orange;
-    return Colors.red;
-  }
-}
-
-// Quick Stats Widget
-class InstructorQuickStats extends StatelessWidget {
-  final int activitiesCount;
-  final int studentsCount;
-  final int pendingApprovals;
-  final int thisMonthActivities;
-  final VoidCallback onActivitiesTap;
-  final VoidCallback onStudentsTap;
-  final VoidCallback onApprovalsTap;
-  final VoidCallback onMonthlyTap;
-
-  const InstructorQuickStats({
-    super.key,
-    required this.activitiesCount,
-    required this.studentsCount,
-    required this.pendingApprovals,
-    required this.thisMonthActivities,
-    required this.onActivitiesTap,
-    required this.onStudentsTap,
-    required this.onApprovalsTap,
-    required this.onMonthlyTap,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            blurRadius: 10,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Quick Overview',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: Colors.black87,
-            ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: _buildQuickStat(
-                  'Activities',
-                  activitiesCount.toString(),
-                  Icons.event,
-                  Colors.green,
-                  onActivitiesTap,
-                ),
-              ),
-              Expanded(
-                child: _buildQuickStat(
-                  'Students',
-                  studentsCount.toString(),
-                  Icons.people,
-                  Colors.blue,
-                  onStudentsTap,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: _buildQuickStat(
-                  'Pending',
-                  pendingApprovals.toString(),
-                  Icons.pending_actions,
-                  pendingApprovals > 0 ? Colors.orange : Colors.grey,
-                  onApprovalsTap,
-                  showAlert: pendingApprovals > 0,
-                ),
-              ),
-              Expanded(
-                child: _buildQuickStat(
-                  'This Month',
-                  thisMonthActivities.toString(),
-                  Icons.calendar_month,
-                  Colors.purple,
-                  onMonthlyTap,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickStat(
-    String label,
-    String value,
-    IconData icon,
-    Color color,
-    VoidCallback onTap, {
-    bool showAlert = false,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.all(4),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: showAlert ? Border.all(color: color, width: 2) : null,
-        ),
-        child: Column(
-          children: [
-            Stack(
-              children: [
-                Icon(icon, size: 24, color: color),
-                if (showAlert)
-                  Positioned(
-                    top: -2,
-                    right: -2,
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 4),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 11,
-                color: color,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-

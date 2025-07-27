@@ -1,4 +1,4 @@
-# backend/beyond_eams/urls.py
+# backend/beyond_eams/urls.py - FINAL FIX
 from django.contrib import admin
 from django.urls import path, include
 from django.http import JsonResponse
@@ -14,24 +14,53 @@ def home(request):
             '/admin/',
             '/api/auth/login/',
             '/api/auth/register/',
-            '/api/auth/admin/dashboard/stats/',
-            '/api/auth/admin/users/',
-            '/api/auth/admin/analytics/',
-            '/api/auth/admin/settings/',
             '/api/activities/',
-            '/api/coordinator/stats/',
-            '/api/coordinator/activities/',
-            '/api/coordinator/activities/create/',
-            '/api/instructor/stats/',
-            '/api/volunteering/',
+            '/api/coordinator/activities/',  # This should work now
+
         ]
     })
 
+# Fix for missing admin routes
+def admin_volunteer_approvals(request):
+    return JsonResponse({
+        'message': 'Volunteer approvals redirected',
+        'redirect_to': '/api/activities/instructor/pending-applications/',
+    })
+
+def admin_users(request):
+    return JsonResponse({
+        'message': 'Admin users redirected', 
+        'redirect_to': '/api/activities/instructor/students/',
+    })
+
+def admin_system_reports(request):
+    return JsonResponse({
+        'message': 'System reports redirected',
+        'redirect_to': '/api/activities/coordinator/reports/',
+    })
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    # Custom admin routes BEFORE main admin
+    path('admin/volunteer-approvals/', admin_volunteer_approvals, name='admin_volunteer_approvals'),
+    path('admin/users/', admin_users, name='admin_users'), 
+    path('admin/system/', admin_system_reports, name='admin_system_reports'),
+    path('admin/reports/', admin_system_reports, name='admin_reports'),
+    
+    # Main routes
     path('', home, name='home'),
+    path('admin/', admin.site.urls),
+    
+    # API routes - FIXED ORDER
     path('api/auth/', include('accounts.urls')),
-    path('api/', include('activities.urls')),
+    path('api/', include('activities.urls')),  # This includes coordinator/activities/
+    path('api/instructor/', include('activities.urls')),
+    path('api/admin/', include('activities.urls')),
+
+    # Additional API routes
+    path('api/admin/users/', admin_users, name='api_admin_users'),
+    path('api/admin/system/', admin_system_reports, name='api_admin_system_reports'),
+    path('api/admin/reports/', admin_system_reports, name='api_admin_reports'),
+
 ]
 
 # Serve media files during development

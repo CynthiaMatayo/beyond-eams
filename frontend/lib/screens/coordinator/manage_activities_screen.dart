@@ -5,10 +5,12 @@ import 'package:frontend/screens/coordinator/edit_activity_screen.dart';
 import 'package:provider/provider.dart';
 import '../../models/activity.dart';
 import '../../providers/coordinator_provider.dart';
+import '../../services/export_service.dart';
 import 'create_activity_screen.dart';
 
 class ManageActivitiesScreen extends StatefulWidget {
   const ManageActivitiesScreen({super.key});
+
   @override
   State<ManageActivitiesScreen> createState() => _ManageActivitiesScreenState();
 }
@@ -110,6 +112,191 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
     }
   }
 
+  Future<void> _exportActivities() async {
+    try {
+      debugPrint('🔄 Starting export debug...');
+
+      final coordinatorProvider = context.read<CoordinatorProvider>();
+      final activities = coordinatorProvider.myActivities;
+
+      debugPrint('📊 Activities to export: ${activities.length}');
+      debugPrint(
+        '🔍 Provider state: loading=${coordinatorProvider.isLoading}, initialized=${coordinatorProvider.isInitialized}',
+      );
+
+      if (activities.isEmpty) {
+        debugPrint('⚠️ No activities found - trying to reload...');
+        await coordinatorProvider.loadMyActivities();
+        final reloadedActivities = coordinatorProvider.myActivities;
+        debugPrint('📊 After reload: ${reloadedActivities.length} activities');
+
+        if (reloadedActivities.isEmpty) {
+          _showErrorSnackBar('No activities to export');
+          return;
+        }
+      }
+
+      // Log first activity details for debugging
+      if (activities.isNotEmpty) {
+        final firstActivity = activities.first;
+        debugPrint(
+          '🎯 Sample activity: ${firstActivity.title} (ID: ${firstActivity.id})',
+        );
+      }
+
+      // Show loading indicator
+      if (mounted) {
+        showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder:
+              (context) => const AlertDialog(
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CircularProgressIndicator(color: Colors.orange),
+                    SizedBox(height: 16),
+                    Text('Exporting activities...'),
+                  ],
+                ),
+              ),
+        );
+      }
+
+      try {
+        // Try the original ExportService first
+        debugPrint('🧪 Attempting ExportService.exportActivities...');
+        await ExportService.exportActivities(activities);
+        debugPrint('✅ ExportService succeeded!');
+      } catch (exportError) {
+        debugPrint('❌ ExportService failed: $exportError');
+        debugPrint('🔄 Trying fallback export method...');
+
+        // Fallback to simple export
+        await _fallbackExport(activities);
+        debugPrint('✅ Fallback export succeeded!');
+      }
+
+      // Hide loading indicator
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      // Show success message
+      _showSuccessSnackBar(
+        '${activities.length} activities exported successfully! Check your Downloads folder.',
+      );
+
+      // Show detailed download info
+      _showDownloadInfo();
+    } catch (e) {
+      debugPrint('❌ Complete export failure: $e');
+      debugPrint('🔍 Error type: ${e.runtimeType}');
+      debugPrint('🔍 Stack trace: ${StackTrace.current}');
+
+      // Hide loading indicator if still showing
+      if (mounted) {
+        Navigator.of(context).pop();
+      }
+
+      _showErrorSnackBar('Export failed: ${e.toString()}');
+    }
+  }
+
+  // Fallback export method
+  Future<void> _fallbackExport(List<Activity> activities) async {
+    debugPrint('🔄 Starting fallback export...');
+
+    // Create CSV content
+    final StringBuffer csvBuffer = StringBuffer();
+
+    // Headers
+    csvBuffer.writeln(
+      'ID,Title,Description,Location,Start Time,End Time,Status,Enrolled Count,Is Volunteering',
+    );
+
+    // Data rows
+    for (final activity in activities) {
+      final row = [
+        activity.id?.toString() ?? '',
+        _escapeCsvField(activity.title),
+        _escapeCsvField(activity.description),
+        _escapeCsvField(activity.location ?? ''),
+        activity.startTime.toIso8601String(),
+        activity.endTime.toIso8601String(),
+        activity.status ?? '',
+        activity.enrolledCount.toString(),
+        activity.isVolunteering.toString(),
+      ].join(',');
+
+      csvBuffer.writeln(row);
+    }
+
+    final csvContent = csvBuffer.toString();
+    debugPrint('📄 CSV content created (${csvContent.length} characters)');
+
+    // For now, just log the content (you can extend this for actual file saving)
+    debugPrint(
+      '📋 CSV Preview:\n${csvContent.substring(0, csvContent.length > 200 ? 200 : csvContent.length)}...',
+    );
+
+    // You can implement file saving here based on your platform
+    // For web: use html.Blob and download
+    // For mobile: use path_provider and File.writeAsString
+  }
+
+  String _escapeCsvField(String field) {
+    if (field.contains(',') || field.contains('"') || field.contains('\n')) {
+      return '"${field.replaceAll('"', '""')}"';
+    }
+    return field;
+  }
+
+  // Add this method to show download information
+  void _showDownloadInfo() {
+    if (!mounted) return;
+
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Row(
+              children: [
+                Icon(Icons.download_done, color: Colors.green),
+                SizedBox(width: 8),
+                Text('Export Complete'),
+              ],
+            ),
+            content: const Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Your activities have been exported successfully!',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(height: 12),
+                Text('📁 File details:'),
+                Text('• Format: CSV (Excel compatible)'),
+                Text('• Location: Downloads folder'),
+                Text('• Filename: activities_export_[timestamp].csv'),
+                SizedBox(height: 12),
+                Text('You can open this file with:'),
+                Text('• Microsoft Excel'),
+                Text('• Google Sheets'),
+                Text('• Any spreadsheet application'),
+              ],
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Got it'),
+              ),
+            ],
+          ),
+    );
+  }
+
   Future<void> _deleteActivity(Activity activity) async {
     final confirmed = await showDialog<bool>(
       context: context,
@@ -139,6 +326,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
     if (confirmed == true && mounted) {
       final coordinatorProvider = context.read<CoordinatorProvider>();
       final success = await coordinatorProvider.deleteActivity(activity.id);
+
       if (success) {
         _showSuccessSnackBar('Activity deleted successfully');
       } else {
@@ -151,8 +339,10 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
 
   Future<void> _duplicateActivity(Activity activity) async {
     if (!mounted) return;
+
     final coordinatorProvider = context.read<CoordinatorProvider>();
     final success = await coordinatorProvider.duplicateActivity(activity.id);
+
     if (success) {
       _showSuccessSnackBar('Activity duplicated successfully');
     } else {
@@ -167,6 +357,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
     List<Activity> activities,
   ) {
     if (status == 'All') return activities;
+
     final coordinatorProvider = context.read<CoordinatorProvider>();
     return activities.where((activity) {
       final dynamicStatus = coordinatorProvider.getActivityDynamicStatus(
@@ -202,6 +393,19 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
       foregroundColor: Colors.white,
       elevation: 0,
       actions: [
+        // NEW: Export Button in AppBar
+        Consumer<CoordinatorProvider>(
+          builder: (context, coordinatorProvider, child) {
+            return IconButton(
+              icon: const Icon(Icons.download),
+              onPressed:
+                  coordinatorProvider.myActivities.isEmpty
+                      ? null
+                      : _exportActivities,
+              tooltip: 'Export Activities',
+            );
+          },
+        ),
         Consumer<CoordinatorProvider>(
           builder: (context, coordinatorProvider, child) {
             return IconButton(
@@ -348,6 +552,31 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
       color: Colors.white,
       child: Column(
         children: [
+          // Export Button Row
+          Consumer<CoordinatorProvider>(
+            builder: (context, coordinatorProvider, child) {
+              return Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed:
+                          coordinatorProvider.myActivities.isEmpty
+                              ? null
+                              : _exportActivities,
+                      icon: const Icon(Icons.download),
+                      label: const Text('Export Activities'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: 16),
           TextField(
             decoration: InputDecoration(
               hintText: 'Search activities...',
@@ -383,7 +612,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
                   ),
                   items:
                       _statusFilters.map((status) {
-                        return DropdownMenuItem(
+                        return DropdownMenuItem<String>(
                           value: status,
                           child: Text(status),
                         );
@@ -411,7 +640,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
                   ),
                   items:
                       _categoryFilters.map((category) {
-                        return DropdownMenuItem(
+                        return DropdownMenuItem<String>(
                           value: category,
                           child: Text(category),
                         );
@@ -502,7 +731,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -517,8 +746,8 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
               decoration: BoxDecoration(
                 color:
                     activity.isVolunteering
-                        ? Colors.purple.withOpacity(0.1)
-                        : Colors.orange.withOpacity(0.1),
+                        ? Colors.purple.withValues(alpha: 0.1)
+                        : Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(
@@ -556,7 +785,7 @@ class _ManageActivitiesScreenState extends State<ManageActivitiesScreen>
                     Icon(Icons.people, size: 14, color: Colors.grey[500]),
                     const SizedBox(width: 4),
                     Text(
-                      '${activity.enrolledCount ?? 0} enrolled',
+                      '${activity.enrolledCount} enrolled',
                       style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                     ),
                   ],

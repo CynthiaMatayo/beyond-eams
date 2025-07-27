@@ -1,5 +1,6 @@
 // lib/screens/dashboard/student_dashboard.dart - UPDATED WITH NEW COLOR SCHEME
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/notification_bell.dart';
 import 'package:provider/provider.dart';
 import '../../providers/activity_provider.dart';
 import '../../providers/volunteer_provider.dart';
@@ -85,6 +86,7 @@ class _StudentDashboardState extends State<StudentDashboard>
         elevation: 0,
         automaticallyImplyLeading: false,
         actions: [
+          const NotificationBell(), 
           IconButton(
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () => _logout(context),

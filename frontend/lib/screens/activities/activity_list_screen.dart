@@ -44,11 +44,13 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
     setState(() {
       _isLoading = true;
     });
+
     try {
       final activityProvider = Provider.of<ActivityProvider>(
         context,
         listen: false,
       );
+
       if (!activityProvider.isInitialized) {
         await activityProvider.initialize();
       }
@@ -157,6 +159,7 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                     itemBuilder: (context, index) {
                       final category = _categories[index];
                       final isSelected = _selectedCategory == category;
+
                       return Container(
                         margin: const EdgeInsets.only(right: 8),
                         child: FilterChip(
@@ -209,9 +212,11 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                         final filteredActivities = _getFilteredActivities(
                           activityProvider.activities,
                         );
+
                         if (filteredActivities.isEmpty) {
                           return _buildEmptyState();
                         }
+
                         return RefreshIndicator(
                           onRefresh: _loadActivities,
                           color: const Color(0xFF8B5CF6),
@@ -242,9 +247,11 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                 _searchQuery.toLowerCase(),
               ) ??
               false);
+
       final matchesCategory =
           _selectedCategory == 'All' ||
           (activity.category ?? 'Other') == _selectedCategory;
+
       return matchesSearch && matchesCategory;
     }).toList();
   }
@@ -293,11 +300,15 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
     );
   }
 
+  // ✅ FIXED: Activity card with VOLUNTEER/REGULAR badges instead of category badges
   Widget _buildActivityCard(dynamic activity) {
     final bool isEnrolled = activity.isEnrolled ?? false;
     final bool isFull =
         (activity.enrolledCount ?? 0) >= (activity.maxParticipants ?? 100);
     final bool isUpcoming = activity.status == 'upcoming';
+    final bool isVolunteering =
+        activity.isVolunteering ?? false; // ✅ ADDED: Check volunteer status
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
@@ -314,30 +325,37 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header with category
+          // Header with VOLUNTEER/REGULAR badge (FIXED)
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: _getCategoryColor(
-                activity.category ?? 'Other',
-              ).withValues(alpha: 0.1),
+              color: (isVolunteering ? Colors.orange : Colors.indigo)
+                  .withValues(
+                    alpha: 0.1,
+                  ), // ✅ FIXED: Color based on volunteer status
               borderRadius: const BorderRadius.vertical(
                 top: Radius.circular(16),
               ),
             ),
             child: Row(
               children: [
+                // ✅ FIXED: VOLUNTEER/REGULAR badge instead of category
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
                     vertical: 6,
                   ),
                   decoration: BoxDecoration(
-                    color: _getCategoryColor(activity.category ?? 'Other'),
+                    color:
+                        isVolunteering
+                            ? Colors.orange
+                            : Colors.indigo, // ✅ FIXED: Proper colors
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(
-                    activity.category ?? 'Other',
+                    isVolunteering
+                        ? 'VOLUNTEER'
+                        : 'REGULAR', // ✅ FIXED: Proper labels
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 12,
@@ -468,7 +486,12 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                                 ? null
                                 : () => _enrollInActivity(activity),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFF8B5CF6),
+                          backgroundColor:
+                              isVolunteering
+                                  ? Colors.orange
+                                  : const Color(
+                                    0xFF8B5CF6,
+                                  ), // ✅ FIXED: Button color based on type
                           foregroundColor: Colors.white,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(8),
@@ -481,7 +504,9 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                               ? 'Full'
                               : !isUpcoming
                               ? 'Past Event'
-                              : 'Enroll',
+                              : isVolunteering
+                              ? 'Apply'
+                              : 'Enroll', // ✅ FIXED: Button text based on type
                         ),
                       ),
                     ),
@@ -636,10 +661,15 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 12),
+                                // ✅ FIXED: Show VOLUNTEER/REGULAR instead of category
                                 _buildDetailRow(
-                                  Icons.category_rounded,
-                                  'Category',
-                                  activity.category ?? 'Other',
+                                  activity.isVolunteering ?? false
+                                      ? Icons.volunteer_activism
+                                      : Icons.event,
+                                  'Type',
+                                  (activity.isVolunteering ?? false)
+                                      ? 'Volunteer Activity'
+                                      : 'Regular Activity',
                                 ),
                                 _buildDetailRow(
                                   Icons.calendar_today_rounded,
@@ -679,9 +709,12 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                                         _enrollInActivity(activity);
                                       },
                                       style: ElevatedButton.styleFrom(
-                                        backgroundColor: const Color(
-                                          0xFF8B5CF6,
-                                        ),
+                                        backgroundColor:
+                                            (activity.isVolunteering ?? false)
+                                                ? Colors.orange
+                                                : const Color(
+                                                  0xFF8B5CF6,
+                                                ), // ✅ FIXED: Button color
                                         foregroundColor: Colors.white,
                                         padding: const EdgeInsets.symmetric(
                                           vertical: 16,
@@ -692,9 +725,11 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                                           ),
                                         ),
                                       ),
-                                      child: const Text(
-                                        'Enroll in Activity',
-                                        style: TextStyle(
+                                      child: Text(
+                                        (activity.isVolunteering ?? false)
+                                            ? 'Apply for Volunteer Position'
+                                            : 'Enroll in Activity', // ✅ FIXED: Button text
+                                        style: const TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600,
                                         ),
@@ -766,13 +801,23 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(20),
             ),
-            title: const Row(
+            title: Row(
               children: [
-                Icon(Icons.event_rounded, color: Color(0xFF8B5CF6)),
-                SizedBox(width: 8),
+                Icon(
+                  (activity.isVolunteering ?? false)
+                      ? Icons.volunteer_activism
+                      : Icons.event_rounded,
+                  color:
+                      (activity.isVolunteering ?? false)
+                          ? Colors.orange
+                          : const Color(0xFF8B5CF6),
+                ), // ✅ FIXED: Icon based on type
+                const SizedBox(width: 8),
                 Text(
-                  'Confirm Enrollment',
-                  style: TextStyle(fontWeight: FontWeight.bold),
+                  (activity.isVolunteering ?? false)
+                      ? 'Confirm Application'
+                      : 'Confirm Enrollment', // ✅ FIXED: Title based on type
+                  style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
               ],
             ),
@@ -781,7 +826,9 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Are you sure you want to enroll in "${activity.title ?? 'this activity'}"?',
+                  (activity.isVolunteering ?? false)
+                      ? 'Are you sure you want to apply for "${activity.title ?? 'this volunteer position'}"?'
+                      : 'Are you sure you want to enroll in "${activity.title ?? 'this activity'}"?', // ✅ FIXED: Message based on type
                   style: const TextStyle(fontSize: 16),
                 ),
                 const SizedBox(height: 12),
@@ -803,7 +850,9 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  'You will receive a confirmation notification once enrolled.',
+                  (activity.isVolunteering ?? false)
+                      ? 'You will receive a confirmation notification once your application is reviewed.'
+                      : 'You will receive a confirmation notification once enrolled.', // ✅ FIXED: Message based on type
                   style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                 ),
               ],
@@ -819,10 +868,15 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
                   _processEnrollment(activity);
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF8B5CF6),
+                  backgroundColor:
+                      (activity.isVolunteering ?? false)
+                          ? Colors.orange
+                          : const Color(0xFF8B5CF6), // ✅ FIXED: Button color
                   foregroundColor: Colors.white,
                 ),
-                child: const Text('Enroll'),
+                child: Text(
+                  (activity.isVolunteering ?? false) ? 'Apply' : 'Enroll',
+                ), // ✅ FIXED: Button text
               ),
             ],
           ),
@@ -872,15 +926,22 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
             ),
           ),
     );
+
     try {
       await Future.delayed(const Duration(seconds: 2));
+
       if (!mounted) return;
+
       Navigator.pop(context); // Remove loading dialog
+
       // Show success message
       _showSnackBar(
-        'Successfully enrolled in "${activity.title ?? 'activity'}"!',
+        (activity.isVolunteering ?? false)
+            ? 'Successfully applied for "${activity.title ?? 'volunteer position'}"!'
+            : 'Successfully enrolled in "${activity.title ?? 'activity'}"!', // ✅ FIXED: Message based on type
         isSuccess: true,
       );
+
       // Update the activity provider
       final activityProvider = Provider.of<ActivityProvider>(
         context,
@@ -896,6 +957,7 @@ class _ActivitiesListScreenState extends State<ActivitiesListScreen> {
 
   void _showSnackBar(String message, {bool isSuccess = false}) {
     if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Row(

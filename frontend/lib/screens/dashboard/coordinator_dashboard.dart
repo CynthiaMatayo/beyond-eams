@@ -1,5 +1,6 @@
 // lib/screens/dashboard/coordinator_dashboard.dart - FIXED VERSION
 import 'package:flutter/material.dart';
+import 'package:frontend/widgets/notification_bell.dart';
 import 'package:provider/provider.dart';
 import '../../providers/coordinator_provider.dart';
 import '../../providers/auth_provider.dart';
@@ -108,6 +109,7 @@ class _CoordinatorDashboardState extends State<CoordinatorDashboard> {
         automaticallyImplyLeading: false,
         elevation: 0,
         actions: [
+          const NotificationBell(),
           IconButton(
             icon: const Icon(Icons.refresh),
             onPressed: _loadDashboardData,
@@ -838,7 +840,7 @@ class _CoordinatorDashboardState extends State<CoordinatorDashboard> {
     });
   }
 
-  void _showMonthlyReport() {
+void _showMonthlyReport() {
     showDialog(
       context: context,
       builder:

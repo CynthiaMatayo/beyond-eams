@@ -1,13 +1,14 @@
-// lib/services/activity_service.dart - FINAL VERSION WITH CORRECT LOCALHOST
+// lib/services/activity_service.dart - COMPLETE FIXED VERSION
 import 'dart:convert';
+import 'package:frontend/services/export_service.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/activity.dart';
 
 class ActivityService {
-  // 🔧 FIXED: Use correct localhost address and path structure
-  static const String baseUrl = 'http://127.0.0.1:8000/api';
+  // ✅ FIXED: Correct base URL - remove duplicate /api/
+  static const String baseUrl = 'http://127.0.0.1:8000/api/activities';
   static const Duration timeoutDuration = Duration(seconds: 15);
 
   // Helper method to get authentication token
@@ -19,13 +20,11 @@ class ActivityService {
           prefs.getString('auth_token') ??
           prefs.getString('jwt_token') ??
           prefs.getString('token');
-
       if (token != null) {
         debugPrint('🔑 Found auth token: ${token.substring(0, 20)}...');
       } else {
         debugPrint('⚠️ No auth token found');
       }
-
       return token;
     } catch (e) {
       debugPrint('❌ Error getting auth token: $e');
@@ -37,24 +36,20 @@ class ActivityService {
   static Future<int?> _getCurrentUserId() async {
     try {
       SharedPreferences prefs = await SharedPreferences.getInstance();
-
       int? userId =
           prefs.getInt('user_id') ??
           prefs.getInt('current_user_id') ??
           prefs.getInt('logged_in_user_id') ??
           prefs.getInt('id');
-
       if (userId != null) {
         debugPrint('✅ Found user ID from storage: $userId');
         return userId;
       }
-
       String? userDataString =
           prefs.getString('user_data') ??
           prefs.getString('current_user') ??
           prefs.getString('auth_user') ??
           prefs.getString('user');
-
       if (userDataString != null) {
         try {
           Map<String, dynamic> userData = json.decode(userDataString);
@@ -68,7 +63,6 @@ class ActivityService {
           debugPrint('❌ Error parsing user data: $e');
         }
       }
-
       debugPrint('⚠️ No user ID found, using fallback ID 1');
       return 1;
     } catch (e) {
@@ -84,7 +78,6 @@ class ActivityService {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
     };
-
     if (requireAuth) {
       String? token = await _getAuthToken();
       if (token != null) {
@@ -93,7 +86,6 @@ class ActivityService {
         throw Exception('Authentication token required but not found');
       }
     }
-
     return headers;
   }
 
@@ -102,7 +94,6 @@ class ActivityService {
     debugPrint(
       '📡 Response body preview: ${response.body.substring(0, response.body.length > 200 ? 200 : response.body.length)}...',
     );
-
     if (response.statusCode >= 200 && response.statusCode < 300) {
       try {
         final data = json.decode(response.body);
@@ -153,26 +144,22 @@ class ActivityService {
     return error.toString();
   }
 
-  // FIXED: Get all activities
+  // ✅ FIXED: Get all activities - correct URL
   static Future<Map<String, dynamic>> getAllActivities({
     int retryCount = 0,
   }) async {
     try {
-      // FIXED: Correct path based on your backend structure
-      final url = '$baseUrl/activities/activities/';
-      // This resolves to: http://127.0.0.1:8000/api/activities/activities/
-
+      // ✅ FIXED: Use correct endpoint - remove duplicate api/
+      final url = '$baseUrl/coordinator/activities/';
       debugPrint('🔍 CALLING URL: $url');
       final headers = await _getHeaders();
       final response = await http
           .get(Uri.parse(url), headers: headers)
           .timeout(timeoutDuration);
-
       final result = _handleResponse(response);
       if (result['success']) {
         dynamic activitiesData = result['data'];
         List activities;
-
         if (activitiesData is Map && activitiesData.containsKey('data')) {
           activities = activitiesData['data'] as List;
         } else if (activitiesData is List) {
@@ -180,7 +167,6 @@ class ActivityService {
         } else {
           activities = [];
         }
-
         debugPrint('✅ Fetched ${activities.length} activities successfully');
         return {'success': true, 'data': activities};
       } else {
@@ -200,7 +186,79 @@ class ActivityService {
     }
   }
 
-  // FIXED: Get student enrolled activities
+  // ✅ FIXED: Get activities with enrollment status
+  static Future<Map<String, dynamic>> getActivitiesWithEnrollmentStatus({
+    int? userId,
+  }) async {
+    try {
+      userId ??= await _getCurrentUserId();
+
+      // ✅ FIXED: Use activities endpoint, not coordinator
+      final url = '$baseUrl/activities/?user_id=$userId';
+      debugPrint('🔍 ACTIVITIES WITH ENROLLMENT URL: $url');
+
+      final headers = await _getHeaders();
+      final response = await http
+          .get(Uri.parse(url), headers: headers)
+          .timeout(timeoutDuration);
+
+      final result = _handleResponse(response);
+
+      if (result['success']) {
+        dynamic responseData = result['data'];
+        List<dynamic> activitiesJson;
+
+        // Handle different response formats
+        if (responseData is Map) {
+          if (responseData.containsKey('data')) {
+            activitiesJson = responseData['data'] as List;
+          } else if (responseData.containsKey('activities')) {
+            activitiesJson = responseData['activities'] as List;
+          } else {
+            activitiesJson = [responseData]; // Single activity
+          }
+        } else if (responseData is List) {
+          activitiesJson = responseData;
+        } else {
+          throw Exception('Unexpected response format');
+        }
+
+        // ✅ FIXED: Convert to Activity objects with type safety
+        List<Activity> activities = [];
+        for (var activityJson in activitiesJson) {
+          try {
+            if (activityJson is Map<String, dynamic>) {
+              final activity = Activity.fromJson(activityJson);
+              activities.add(activity);
+            }
+          } catch (e) {
+            debugPrint('❌ Error parsing activity: $e');
+            debugPrint('❌ Problematic JSON: $activityJson');
+            continue; // Skip invalid activities
+          }
+        }
+
+        debugPrint(
+          '✅ Successfully parsed ${activities.length} activities with enrollment status',
+        );
+        return {'success': true, 'data': activities};
+      }
+
+      return result;
+    } catch (e) {
+      debugPrint('❌ Error getting activities with enrollment status: $e');
+      return {
+        'success': false,
+        'error': {
+          'message': 'Failed to load activities',
+          'type': 'connection_error',
+          'details': e.toString(),
+        },
+      };
+    }
+  }
+
+  // ✅ FIXED: Get student enrolled activities
   static Future<Map<String, dynamic>> getStudentEnrolledActivities(
     int? userId,
   ) async {
@@ -215,18 +273,13 @@ class ActivityService {
           },
         };
       }
-
-      // FIXED: Correct path based on your backend structure
-      final url = '$baseUrl/activities/student-enrolled/?user_id=$userId';
-      // This resolves to: http://127.0.0.1:8000/api/activities/student-enrolled/?user_id=3
-
+      // ✅ FIXED: Correct endpoint pattern
+      final url = '$baseUrl/student-enrolled/?user_id=$userId';
       debugPrint('🔍 ENROLLED ACTIVITIES URL: $url');
       final headers = await _getHeaders(requireAuth: false);
-
       final response = await http
           .get(Uri.parse(url), headers: headers)
           .timeout(timeoutDuration);
-
       final result = _handleResponse(response);
       if (result['success']) {
         final data = result['data'];
@@ -251,26 +304,209 @@ class ActivityService {
     }
   }
 
-  // FIXED: Enroll in activity
+  // ✅ FIXED: Get recent activities with proper typing
+  static Future<Map<String, dynamic>> getRecentActivitiesTyped({
+    int? userId,
+    int limit = 10,
+  }) async {
+    try {
+      userId ??= await _getCurrentUserId();
+
+      final url = '$baseUrl/student-recent/?user_id=$userId&limit=$limit';
+      debugPrint('🔍 RECENT ACTIVITIES TYPED URL: $url');
+
+      final headers = await _getHeaders();
+      final response = await http
+          .get(Uri.parse(url), headers: headers)
+          .timeout(timeoutDuration);
+
+      final result = _handleResponse(response);
+
+      if (result['success']) {
+        final data = result['data'];
+        List<dynamic> recentActivitiesJson;
+
+        if (data is Map && data.containsKey('recent_activities')) {
+          recentActivitiesJson = data['recent_activities'] as List;
+        } else if (data is List) {
+          recentActivitiesJson = data;
+        } else {
+          recentActivitiesJson = [];
+        }
+
+        // ✅ FIXED: Convert to Activity objects (not RecentActivity)
+        List<Activity> recentActivities = [];
+        for (var activityJson in recentActivitiesJson) {
+          try {
+            if (activityJson is Map<String, dynamic>) {
+              // Add any missing required fields for Activity.fromJson
+              if (!activityJson.containsKey('created_by')) {
+                activityJson['created_by'] = 0;
+              }
+              if (!activityJson.containsKey('created_by_name')) {
+                activityJson['created_by_name'] = 'Unknown';
+              }
+              if (!activityJson.containsKey('created_at')) {
+                activityJson['created_at'] = DateTime.now().toIso8601String();
+              }
+              if (!activityJson.containsKey('is_volunteering')) {
+                activityJson['is_volunteering'] = false;
+              }
+
+              final activity = Activity.fromJson(activityJson);
+              recentActivities.add(activity);
+            }
+          } catch (e) {
+            debugPrint('❌ Error parsing recent activity: $e');
+            debugPrint('❌ Problematic JSON: $activityJson');
+            continue;
+          }
+        }
+
+        debugPrint(
+          '✅ Successfully parsed ${recentActivities.length} recent activities',
+        );
+        return {'success': true, 'data': recentActivities};
+      }
+
+      return result;
+    } catch (e) {
+      debugPrint('❌ Error getting recent activities: $e');
+      return {
+        'success': false,
+        'error': {
+          'message': 'Failed to load recent activities',
+          'type': 'connection_error',
+          'details': e.toString(),
+        },
+      };
+    }
+  }
+
+  // Export activities with corrected URL
+  static Future<Map<String, dynamic>> exportActivitiesFromBackend({
+    int? coordinatorId,
+  }) async {
+    try {
+      // ✅ FIXED: Build URL for backend export endpoint
+      String url = '$baseUrl/coordinator/activities/';
+      if (coordinatorId != null) {
+        url += '?coordinator_id=$coordinatorId';
+      }
+      debugPrint('🔄 Exporting activities from: $url');
+      final headers = await _getHeaders();
+      final response = await http
+          .get(Uri.parse(url), headers: headers)
+          .timeout(timeoutDuration);
+      final result = _handleResponse(response);
+      if (result['success']) {
+        // Parse activities from response
+        final activities = _parseActivitiesFromResponse(result['data']);
+        if (activities.isEmpty) {
+          return {
+            'success': false,
+            'error': {
+              'message': 'No activities found to export',
+              'type': 'no_data',
+            },
+          };
+        }
+        debugPrint('✅ Found ${activities.length} activities to export');
+        // Export using ExportService
+        await ExportService.exportActivities(activities);
+        return {
+          'success': true,
+          'message': 'Activities exported successfully',
+          'count': activities.length,
+        };
+      } else {
+        return result;
+      }
+    } catch (e) {
+      debugPrint('❌ Error exporting activities: $e');
+      return {
+        'success': false,
+        'error': {
+          'message': 'Failed to export activities',
+          'type': 'export_error',
+          'details': e.toString(),
+        },
+      };
+    }
+  }
+
+  // Helper method to safely parse activities from API responses
+  static List<Activity> _parseActivitiesFromResponse(dynamic responseData) {
+    List<Activity> activities = [];
+    try {
+      List<dynamic> activitiesJson;
+      if (responseData is List) {
+        activitiesJson = responseData;
+      } else if (responseData is Map) {
+        if (responseData.containsKey('data')) {
+          activitiesJson = responseData['data'] as List;
+        } else if (responseData.containsKey('activities')) {
+          activitiesJson = responseData['activities'] as List;
+        } else {
+          activitiesJson = [responseData];
+        }
+      } else {
+        throw Exception('Invalid response format');
+      }
+      for (var activityJson in activitiesJson) {
+        try {
+          if (activityJson is Map<String, dynamic>) {
+            final activity = Activity.fromJson(activityJson);
+            activities.add(activity);
+          }
+        } catch (e) {
+          debugPrint('❌ Error parsing individual activity: $e');
+          debugPrint('❌ Problematic JSON: $activityJson');
+          continue; // Skip malformed activities
+        }
+      }
+    } catch (e) {
+      debugPrint('❌ Error in _parseActivitiesFromResponse: $e');
+    }
+    return activities;
+  }
+
+  // ✅ FIXED: Get activities with proper type conversion
+  static Future<Map<String, dynamic>> getActivitiesTyped() async {
+    try {
+      final result = await getAllActivities();
+      if (result['success']) {
+        final activities = _parseActivitiesFromResponse(result['data']);
+        return {'success': true, 'data': activities};
+      }
+      return result;
+    } catch (e) {
+      debugPrint('❌ Error in getActivitiesTyped: $e');
+      return {
+        'success': false,
+        'error': {
+          'message': 'Failed to load activities',
+          'type': 'parsing_error',
+          'details': e.toString(),
+        },
+      };
+    }
+  }
+
+  // ✅ FIXED: Enroll in activity
   static Future<Map<String, dynamic>> enrollInActivity(
     int activityId,
     int userId,
   ) async {
     try {
-      // FIXED: Correct path for enrollment
-      final url = '$baseUrl/activities/activities/$activityId/enroll/';
-      // This resolves to: http://127.0.0.1:8000/api/activities/activities/1/enroll/
-
+      final url = '$baseUrl/activities/$activityId/enroll/';
       debugPrint('🔍 ENROLLMENT URL: $url');
       debugPrint('📡 Enrolling user $userId in activity $activityId');
-
       final headers = await _getHeaders(requireAuth: false);
-
       Map<String, dynamic> requestBody = {
         'user_id': userId,
         'activity_id': activityId,
       };
-
       final response = await http
           .post(
             Uri.parse(url),
@@ -278,7 +514,6 @@ class ActivityService {
             body: json.encode(requestBody),
           )
           .timeout(timeoutDuration);
-
       final result = _handleResponse(response);
       if (result['success']) {
         debugPrint('✅ Successfully enrolled in activity $activityId');
@@ -301,23 +536,20 @@ class ActivityService {
     }
   }
 
-  // FIXED: Withdraw from activity
+  // Withdraw from activity
   static Future<Map<String, dynamic>> withdrawFromActivity(
     int activityId,
     int userId,
   ) async {
     try {
-      final url = '$baseUrl/activities/activities/$activityId/enroll/';
+      final url = '$baseUrl/activities/$activityId/enroll/';
       debugPrint('🔍 WITHDRAWAL URL: $url');
       debugPrint('📡 Withdrawing user $userId from activity $activityId');
-
       final headers = await _getHeaders(requireAuth: false);
-
       Map<String, dynamic> requestBody = {
         'user_id': userId,
         'activity_id': activityId,
       };
-
       final response = await http
           .delete(
             Uri.parse(url),
@@ -325,7 +557,6 @@ class ActivityService {
             body: json.encode(requestBody),
           )
           .timeout(timeoutDuration);
-
       final result = _handleResponse(response);
       if (result['success']) {
         debugPrint('✅ Successfully withdrew from activity $activityId');
@@ -349,17 +580,15 @@ class ActivityService {
     }
   }
 
-  // FIXED: Get activity details
+  // Get activity details
   static Future<Map<String, dynamic>> getActivityDetails(int id) async {
     try {
-      final url = '$baseUrl/activities/activities/$id/';
+      final url = '$baseUrl/activities/$id/';
       debugPrint('🔍 ACTIVITY DETAILS URL: $url');
       final headers = await _getHeaders();
-
       final response = await http
           .get(Uri.parse(url), headers: headers)
           .timeout(timeoutDuration);
-
       final result = _handleResponse(response);
       if (result['success']) {
         try {
@@ -394,18 +623,16 @@ class ActivityService {
     }
   }
 
-  // FIXED: QR Code check-in
+  // QR Code check-in
   static Future<Map<String, dynamic>> checkInWithQR(
     String qrCode,
     int activityId,
   ) async {
     try {
-      final url = '$baseUrl/activities/attendance/mark/';
+      final url = '$baseUrl/attendance/mark/';
       debugPrint('🔍 QR CHECK-IN URL: $url');
       debugPrint('📡 Checking in with QR code: ${qrCode.substring(0, 8)}...');
-
       final headers = await _getHeaders(requireAuth: true);
-
       final response = await http
           .post(
             Uri.parse(url),
@@ -413,7 +640,6 @@ class ActivityService {
             body: json.encode({'qr_code': qrCode, 'activity_id': activityId}),
           )
           .timeout(timeoutDuration);
-
       final result = _handleResponse(response);
       if (result['success']) {
         final data = result['data'];
@@ -461,12 +687,11 @@ class ActivityService {
     }
   }
 
-  // FIXED: Check server connectivity
+  // ✅ FIXED: Check server connectivity
   static Future<Map<String, dynamic>> checkServerConnection() async {
     try {
-      final url = '$baseUrl/activities/health/';
+      final url = '$baseUrl/health/';
       debugPrint('🔍 HEALTH CHECK URL: $url');
-
       final response = await http
           .get(
             Uri.parse(url),
@@ -476,7 +701,6 @@ class ActivityService {
             },
           )
           .timeout(Duration(seconds: 5));
-
       if (response.statusCode == 200) {
         debugPrint('✅ Server is reachable');
         return {
@@ -510,4 +734,137 @@ class ActivityService {
     }
   }
 
+  // Get student recent activities
+  static Future<Map<String, dynamic>> getStudentRecentActivities(
+    int? userId,
+  ) async {
+    try {
+      userId ??= await _getCurrentUserId();
+      if (userId == null) {
+        return {
+          'success': false,
+          'error': {
+            'message': 'User ID not found. Please log in again.',
+            'type': 'auth_error',
+          },
+        };
+      }
+      final url = '$baseUrl/student-recent/?user_id=$userId';
+      debugPrint('🔍 RECENT ACTIVITIES URL: $url');
+      final headers = await _getHeaders(requireAuth: false);
+      final response = await http
+          .get(Uri.parse(url), headers: headers)
+          .timeout(timeoutDuration);
+      final result = _handleResponse(response);
+      if (result['success']) {
+        final data = result['data'];
+        if (data is Map && data.containsKey('recent_activities')) {
+          return {'success': true, 'data': data['recent_activities']};
+        }
+        return result;
+      } else {
+        debugPrint('❌ Failed to get recent activities: ${result['error']}');
+        return result;
+      }
+    } catch (e) {
+      debugPrint('❌ Error getting recent activities: $e');
+      return {
+        'success': false,
+        'error': {
+          'message': 'Failed to load recent activities.',
+          'type': 'recent_activities_error',
+          'details': e.toString(),
+        },
+      };
+    }
+  }
+
+  // Get student volunteer applications
+  static Future<Map<String, dynamic>> getStudentVolunteerApplications(
+    int? userId,
+  ) async {
+    try {
+      userId ??= await _getCurrentUserId();
+      if (userId == null) {
+        return {
+          'success': false,
+          'error': {
+            'message': 'User ID not found. Please log in again.',
+            'type': 'auth_error',
+          },
+        };
+      }
+      final url = '$baseUrl/student-volunteer-applications/?user_id=$userId';
+      debugPrint('🔍 VOLUNTEER APPLICATIONS URL: $url');
+      final headers = await _getHeaders(requireAuth: false);
+      final response = await http
+          .get(Uri.parse(url), headers: headers)
+          .timeout(timeoutDuration);
+      final result = _handleResponse(response);
+      if (result['success']) {
+        final data = result['data'];
+        if (data is Map && data.containsKey('volunteer_applications')) {
+          return {'success': true, 'data': data['volunteer_applications']};
+        }
+        return result;
+      } else {
+        debugPrint(
+          '❌ Failed to get volunteer applications: ${result['error']}',
+        );
+        return result;
+      }
+    } catch (e) {
+      debugPrint('❌ Error getting volunteer applications: $e');
+      return {
+        'success': false,
+        'error': {
+          'message': 'Failed to load volunteer applications.',
+          'type': 'volunteer_applications_error',
+          'details': e.toString(),
+        },
+      };
+    }
+  }
+
+  // Get student dashboard data
+  static Future<Map<String, dynamic>> getStudentDashboardData(
+    int? userId,
+  ) async {
+    try {
+      userId ??= await _getCurrentUserId();
+      if (userId == null) {
+        return {
+          'success': false,
+          'error': {
+            'message': 'User ID not found. Please log in again.',
+            'type': 'auth_error',
+          },
+        };
+      }
+      final url = '$baseUrl/student-dashboard-data/?user_id=$userId';
+      debugPrint('🔍 DASHBOARD DATA URL: $url');
+      final headers = await _getHeaders(requireAuth: false);
+      final response = await http
+          .get(Uri.parse(url), headers: headers)
+          .timeout(timeoutDuration);
+      final result = _handleResponse(response);
+      if (result['success']) {
+        debugPrint('✅ Successfully loaded dashboard data');
+        return result;
+      } else {
+        debugPrint('❌ Failed to get dashboard data: ${result['error']}');
+        return result;
+      }
+    } catch (e) {
+      debugPrint('❌ Error getting dashboard data: $e');
+      return {
+        'success': false,
+        'error': {
+          'message': 'Failed to load dashboard data.',
+          'type': 'dashboard_data_error',
+          'details': e.toString(),
+        },
+      };
+    }
+  }
 }

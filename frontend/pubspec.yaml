@@ -31,12 +31,14 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+    
 
   connectivity_plus: ^3.0.2
   
 
   # State management
   provider: ^6.1.1
+  path_provider: ^2.1.1
 
   # HTTP requests
   http: ^1.2.0

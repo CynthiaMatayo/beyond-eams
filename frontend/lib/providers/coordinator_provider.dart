@@ -44,15 +44,12 @@ class CoordinatorProvider with ChangeNotifier {
   /// Calculate dynamic status based on current date and activity dates
   String getActivityDynamicStatus(Activity activity) {
     final now = DateTime.now();
-
     if (activity.status.toLowerCase() == 'draft') {
       return 'draft';
     }
-
     if (activity.status.toLowerCase() == 'cancelled') {
       return 'cancelled';
     }
-
     if (now.isBefore(activity.startTime)) {
       return 'upcoming';
     } else if (now.isAfter(activity.endTime)) {
@@ -157,7 +154,6 @@ class CoordinatorProvider with ChangeNotifier {
       _isInitialized = true;
       debugPrint('✅ CoordinatorProvider initialized successfully');
       debugPrint('📊 Loaded ${_myActivities.length} activities total');
-
       _setLoading(false);
       notifyListeners();
     } catch (e) {
@@ -183,7 +179,7 @@ class CoordinatorProvider with ChangeNotifier {
       debugPrint(
         '🔧 Using general activities endpoint (coordinator endpoint failing)',
       );
-      final allActivities = await _coordinatorService.getAllActivities();
+final allActivities = await _coordinatorService.getMyActivities();
 
       // Filter for activities created by current coordinator
       _myActivities =
@@ -259,6 +255,7 @@ class CoordinatorProvider with ChangeNotifier {
 
       final calculatedThisMonth =
           _coordinatorStats['this_month_activities'] ?? 0;
+
       _coordinatorStats = {
         ..._coordinatorStats,
         ...stats,
@@ -353,10 +350,8 @@ class CoordinatorProvider with ChangeNotifier {
 
       // CRITICAL: Refresh all data from database instead of just adding locally
       await _loadMyActivitiesFromDatabase();
-
       debugPrint('✅ Activity created successfully in database');
       debugPrint('📊 Total activities after creation: ${_myActivities.length}');
-
       _setLoading(false);
       notifyListeners();
       return true;
@@ -389,7 +384,6 @@ class CoordinatorProvider with ChangeNotifier {
       if (index != -1) {
         _myActivities[index] = activity;
       }
-
       _calculateStatsFromActivities();
       debugPrint('✅ Activity updated successfully in database');
       _setLoading(false);
@@ -410,10 +404,8 @@ class CoordinatorProvider with ChangeNotifier {
     try {
       debugPrint('🗑️ Deleting activity from database: $activityId');
       await _coordinatorService.deleteActivity(activityId);
-
       _myActivities.removeWhere((a) => a.id == activityId);
       _calculateStatsFromActivities();
-
       debugPrint('✅ Activity deleted successfully from database');
       notifyListeners();
       return true;
@@ -431,7 +423,6 @@ class CoordinatorProvider with ChangeNotifier {
     try {
       debugPrint('📋 Duplicating activity in database: $activityId');
       await _coordinatorService.duplicateActivity(activityId);
-
       await _loadMyActivitiesFromDatabase();
       debugPrint('✅ Activity duplicated successfully in database');
       return true;
@@ -456,7 +447,6 @@ class CoordinatorProvider with ChangeNotifier {
           status: 'upcoming',
         );
       }
-
       _calculateStatsFromActivities();
       debugPrint('✅ Activity published successfully in database');
       notifyListeners();
@@ -474,8 +464,8 @@ class CoordinatorProvider with ChangeNotifier {
     try {
       debugPrint('📡 Fetching activities by status from database: $status');
       final activities = await _coordinatorService.getAllActivities();
-
       final currentUserId = _authProvider?.user?.id;
+
       final myActivities =
           activities
               .where((activity) => activity.createdBy == currentUserId)

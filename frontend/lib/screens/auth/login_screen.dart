@@ -523,6 +523,8 @@ class _LoginScreenState extends State<LoginScreen> {
         errorMessage = 'Network error. Please check your connection.';
       }
       _showErrorSnackBar(errorMessage);
+      _usernameController.clear();
+      _passwordController.clear();
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -537,9 +539,7 @@ class _LoginScreenState extends State<LoginScreen> {
               borderRadius: BorderRadius.circular(16),
             ),
             title: const Text('Forgot Password'),
-            content: const Text(
-              'Password reset functionality will be available soon.',
-            ),
+            content: const Text('Sending reset link ...'),
             actions: [
               TextButton(
                 onPressed: () => Navigator.pop(context),
@@ -554,11 +554,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (!mounted) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message, style: const TextStyle(fontSize: 13)),
+        content: Text(message, style: const TextStyle(fontSize: 14)),
         backgroundColor: Colors.red,
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        margin: const EdgeInsets.symmetric(horizontal: 40, vertical: 54),
       ),
     );
   }

@@ -151,13 +151,13 @@ class AuthProvider with ChangeNotifier {
   }
 
   // FIXED: Login method with activity provider initialization
-  Future<bool> login(String email, String password) async {
-    debugPrint('🔐 LOGIN: Starting login for email: $email');
+  Future<bool> login(String username, String password) async {
+    debugPrint('🔐 LOGIN: Starting login for username: $username');
     _setLoading(true);
     _error = null;
 
     try {
-      final response = await _apiService.login(email, password);
+      final response = await _apiService.login(username, password);
       debugPrint('🔐 LOGIN: API Response received: $response');
 
       if (response != null) {
@@ -195,17 +195,29 @@ class AuthProvider with ChangeNotifier {
 
         return true;
       } else {
-        _error = 'Login failed';
+        _error = 'Invalid username or password';
         _setLoading(false);
         return false;
       }
-    } catch (e) {
-      _error = 'Login failed: $e';
-      debugPrint('❌ LOGIN ERROR: $e');
-      _setLoading(false);
-      return false;
-    }
+} catch (e) {
+  String message = e.toString();
+
+  if (message.contains('Invalid credentials') ||
+      message.contains('Invalid username or password')) {
+    _error = 'Invalid username or password';
+  } else if (message.contains('SocketException') ||
+      message.contains('Network')) {
+    _error = 'Network error. Please check your connection.';
+  } else {
+    _error = 'Invalid username or password';
   }
+
+  debugPrint('❌ LOGIN ERROR: $_error');
+  _setLoading(false);
+  return false;
+
+}
+}
 
   // Register method - ENHANCED
   Future<bool> register({

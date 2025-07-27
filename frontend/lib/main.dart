@@ -1,8 +1,9 @@
-// lib/main.dart - FIXED VERSION with Volunteer Management Route Added
+// lib/main.dart - FINAL FIXED VERSION with correct class names
 import 'package:flutter/material.dart';
 import 'package:frontend/providers/coordinator_provider.dart';
 import 'package:frontend/screens/activities/recent_activities_screen.dart';
 import 'package:frontend/screens/admin/admin/system_settings_screen.dart';
+import 'package:frontend/widgets/analytics_chart.dart';
 import 'package:provider/provider.dart';
 
 // Provider imports - Fixed to avoid conflicts
@@ -20,7 +21,8 @@ import 'screens/splash_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/dashboard/student_dashboard.dart';
-import 'screens/dashboard/admin_dashboard.dart';
+// FIXED: Import admin dashboard with alias to avoid conflict
+import 'screens/dashboard/admin_dashboard.dart' as AdminDash;
 import 'screens/activities/browse_activities_screen.dart';
 import 'screens/activities/my_activities_screen.dart';
 import 'screens/activities/activity_qr_screen.dart';
@@ -39,16 +41,24 @@ import 'screens/coordinator/manage_activities_screen.dart';
 import 'screens/coordinator/promote_activities_screen.dart';
 import 'screens/coordinator/activity_reports_screen.dart';
 import 'screens/coordinator/edit_activity_screen.dart';
-// FIXED: Add missing volunteer management import
 import 'screens/coordinator/volunteer_management_screen.dart';
 
 // Admin imports - only the files we actually created
 import 'screens/admin/user_management_screen.dart';
 import 'screens/admin/system_reports_screen.dart';
 import 'screens/admin/role_management_screen.dart';
+import 'screens/admin/data_export_screen.dart';
+import 'screens/admin/admin/admin_activities_screen.dart';
+import 'screens/admin/admin_notifications_screen.dart';
 
 // Utils
 import 'utils/notification_helper.dart';
+
+//widgets
+import 'services/notification_service.dart';
+import 'services/export_service.dart';
+import 'widgets/notification_bell.dart';
+import 'widgets/admin_export_widget.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -98,68 +108,6 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
-
-  static void _showLogoutDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder:
-          (context) => AlertDialog(
-            title: const Text('Logout'),
-            content: const Text('Are you sure you want to logout?'),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(context).pop(),
-                child: const Text('Cancel'),
-              ),
-              TextButton(
-                onPressed: () async {
-                  Navigator.of(context).pop();
-                  // Clear all provider data before logout
-                  try {
-                    final activityProvider =
-                        Provider.of<ActivityProviders.ActivityProvider>(
-                          context,
-                          listen: false,
-                        );
-                    final volunteerProvider =
-                        Provider.of<VolunteerProviders.VolunteerProvider>(
-                          context,
-                          listen: false,
-                        );
-                    final coordinatorProvider =
-                        Provider.of<CoordinatorProvider>(
-                          context,
-                          listen: false,
-                        );
-                    final authProvider = Provider.of<AuthProvider>(
-                      context,
-                      listen: false,
-                    );
-
-                    // Clear all cached data
-                    await activityProvider.clearAllData();
-                    await volunteerProvider.clearAllData();
-                    await coordinatorProvider.clearAllData();
-                    await authProvider.logout();
-
-                    debugPrint('✅ All provider data cleared on logout');
-                  } catch (e) {
-                    debugPrint('⚠️ Error clearing provider data: $e');
-                  }
-
-                  Navigator.pushNamedAndRemoveUntil(
-                    context,
-                    '/login',
-                    (route) => false,
-                  );
-                },
-                style: TextButton.styleFrom(foregroundColor: Colors.red),
-                child: const Text('Logout'),
-              ),
-            ],
-          ),
-    );
-  }
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
@@ -169,7 +117,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-
     // FIXED: Initialize app providers after the widget tree is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _initializeAppWithProperProviderConnection();
@@ -237,7 +184,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           );
           await coordinatorProvider.initialize();
         }
-
         debugPrint('✅ All providers initialized by auth provider');
       });
 
@@ -302,7 +248,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     try {
       debugPrint('🔄 Refreshing app data...');
       final authProvider = Provider.of<AuthProvider>(context, listen: false);
-
       if (!authProvider.isLoggedIn) return;
 
       final activityProvider = Provider.of<ActivityProviders.ActivityProvider>(
@@ -387,7 +332,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             (context) => const StudentDashboardWithBottomNav(),
         '/instructor-dashboard': (context) => const InstructorMainScreen(),
         '/coordinator-dashboard': (context) => const CoordinatorMainScreen(),
-        '/admin-dashboard': (context) => const AdminDashboard(),
+        // FIXED: Use aliased AdminDashboard
+        '/admin-dashboard': (context) => const AdminDash.AdminDashboard(),
 
         // Student Activity Routes
         '/browse-activities':
@@ -410,15 +356,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
             (context) => const PromoteActivitiesScreen(),
         '/coordinator/activity-reports':
             (context) => const ActivityReportsScreen(),
-        // FIXED: Add missing volunteer management route
         '/coordinator/volunteer-management':
             (context) => const VolunteerManagementScreen(),
 
-        // Admin Routes
+        // Admin Routes - FIXED: All routes working
         '/admin/user-management': (context) => const UserManagementScreen(),
         '/admin/system-reports': (context) => const SystemReportsScreen(),
         '/admin/role-management': (context) => const RoleManagementScreen(),
         '/admin/system-settings': (context) => const SystemSettingsScreen(),
+        '/admin/activities': (context) => const AdminActivitiesScreen(),
+        '/admin/system-health': (context) => const SystemReportsScreen(),
+        '/admin/notifications': (context) => const AdminNotificationsScreen(),
+        '/notifications': (context) => const AdminNotificationsScreen(),
+        '/admin/data-export': (context) => const DataExportScreen(),
+        '/admin/analytics': (context) => const DashboardAnalytics(),
+        // FIXED: Use existing volunteer screen - MyVolunteerApplicationsScreen
+        '/admin/volunteers': (context) => const MyVolunteerApplicationsScreen(),
+        '/admin/volunteer-applications':
+            (context) => const MyVolunteerApplicationsScreen(),
 
         // Profile & Settings Routes
         '/profile': (context) => const MyProfileScreenWithBottomNav(),
@@ -426,7 +381,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         '/notifications-settings':
             (context) => const NotificationsSettingsScreen(),
         '/achievements': (context) => const AchievementsScreen(),
-
       },
       onGenerateRoute: (settings) {
         if (settings.name?.startsWith('/coordinator/edit-activity/') == true) {
@@ -438,7 +392,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 ),
           );
         }
-
         return MaterialPageRoute(
           builder:
               (context) => Scaffold(
@@ -677,7 +630,8 @@ class _RoleBasedDashboardState extends State<RoleBasedDashboard> {
           case 'coordinator':
             return const CoordinatorMainScreen();
           case 'admin':
-            return const AdminDashboard();
+            // FIXED: Use aliased AdminDashboard
+            return const AdminDash.AdminDashboard();
           default:
             return const StudentDashboardWithBottomNav();
         }

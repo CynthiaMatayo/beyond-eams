@@ -1,4 +1,5 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
+
 part of 'user.dart';
 
 // **************************************************************************
@@ -6,20 +7,17 @@ part of 'user.dart';
 // **************************************************************************
 
 User _$UserFromJson(Map<String, dynamic> json) => User(
-  id: (json['id'] as num?)?.toInt() ?? 0,
-  username: json['username'] as String? ?? '',
-  email: json['email'] as String? ?? '',
-  firstName: json['first_name'] as String? ?? '',
-  lastName: json['last_name'] as String? ?? '',
-  phoneNumber: json['phone_number'] as String? ?? json['phone'] as String?,
+  id: (json['id'] as num).toInt(),
+  username: json['username'] as String,
+  email: json['email'] as String,
+  firstName: json['first_name'] as String,
+  lastName: json['last_name'] as String,
+  phoneNumber: json['phone_number'] as String?,
   department: json['department'] as String?,
   registrationNumber: json['registration_number'] as String?,
-  role: json['role'] as String? ?? 'student',
+  role: json['role'] as String,
   profileImage: json['profile_image'] as String?,
-  dateJoined:
-      json['date_joined'] != null
-          ? DateTime.parse(json['date_joined'] as String)
-          : DateTime.now(),
+  dateJoined: DateTime.parse(json['date_joined'] as String),
   isActive: json['is_active'] as bool? ?? true,
 );
 

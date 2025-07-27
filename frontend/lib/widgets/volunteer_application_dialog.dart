@@ -1,21 +1,26 @@
-// lib/widgets/volunteer_application_dialog.dart - ENHANCED VERSION WITH STRUCTURED FORM
+// lib/widgets/volunteer_application_dialog.dart - COMPLETE FIXED VERSION
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../providers/volunteer_provider.dart';
 
 class VolunteerApplicationDialog extends StatefulWidget {
-  final String activityTitle;
-  final String activityDescription;
-  final DateTime activityDateTime;
-  final String activityLocation;
-  final int activityDurationHours;
+  // FIXED: Updated parameter names to match your usage
+  final String title;
+  final String description;
+  final DateTime dateTime;
+  final String location;
+  final int durationHours;
+  final int activityId;
   final VoidCallback? onSubmit;
 
   const VolunteerApplicationDialog({
     super.key,
-    required this.activityTitle,
-    required this.activityDescription,
-    required this.activityDateTime,
-    required this.activityLocation,
-    required this.activityDurationHours,
+    required this.title,
+    required this.description,
+    required this.dateTime,
+    required this.location,
+    required this.durationHours,
+    required this.activityId,
     this.onSubmit,
   });
 
@@ -28,60 +33,39 @@ class _VolunteerApplicationDialogState
     extends State<VolunteerApplicationDialog> {
   final _formKey = GlobalKey<FormState>();
   final _motivationController = TextEditingController();
-  final _experienceController = TextEditingController();
   final _specificRoleController = TextEditingController();
-
   bool _isSubmitting = false;
   String _selectedAvailability = '';
-  String _selectedCommitment = '';
 
-  // Structured availability options
+  // Realistic and focused availability options
   final List<String> _availabilityOptions = [
-    'Full event duration (${_formatDuration})',
+    'Full event duration',
     'Morning session only',
     'Afternoon session only',
-    'Evening session only',
     'Setup phase only',
     'Main event only',
     'Cleanup phase only',
   ];
 
-  // Commitment level options
-  final List<String> _commitmentOptions = [
-    'Full commitment - can work entire duration',
-    'Partial commitment - can work 50-75% of time',
-    'Limited commitment - can work 25-50% of time',
-    'Minimal commitment - can work less than 25% of time',
-  ];
-
-  static String get _formatDuration => ''; // Will be filled in initState
-
   @override
   void initState() {
     super.initState();
-    // Update the duration in the first availability option
-    _availabilityOptions[0] =
-        'Full event duration (${widget.activityDurationHours} hours)';
+    // Set realistic default values for better UX
+    _motivationController.text =
+        'I am interested in volunteering because I enjoy helping others and contributing to community activities. This opportunity aligns with my values and I believe I can make a positive impact.';
   }
 
   @override
   void dispose() {
     _motivationController.dispose();
-    _experienceController.dispose();
     _specificRoleController.dispose();
     super.dispose();
   }
 
   Future<void> _submitApplication() async {
     if (!_formKey.currentState!.validate()) return;
-
     if (_selectedAvailability.isEmpty) {
       _showErrorMessage('Please select your availability');
-      return;
-    }
-
-    if (_selectedCommitment.isEmpty) {
-      _showErrorMessage('Please select your commitment level');
       return;
     }
 
@@ -90,68 +74,78 @@ class _VolunteerApplicationDialogState
     });
 
     try {
-      // Enhanced application data with all form fields
+      // Create application data with all necessary fields
       final applicationData = {
-        'activity_title': widget.activityTitle,
-        'activity_datetime': widget.activityDateTime.toIso8601String(),
-        'activity_location': widget.activityLocation,
+        'activity_id': widget.activityId,
+        'activity_title': widget.title,
+        'activity_datetime': widget.dateTime.toIso8601String(),
+        'activity_location': widget.location,
         'motivation': _motivationController.text.trim(),
-        'experience': _experienceController.text.trim(),
-        'specific_role': _specificRoleController.text.trim(),
+        'specific_role':
+            _specificRoleController.text.trim().isEmpty
+                ? 'General volunteer'
+                : _specificRoleController.text.trim(),
         'availability': _selectedAvailability,
-        'commitment_level': _selectedCommitment,
+        'status': 'pending',
         'submitted_at': DateTime.now().toIso8601String(),
       };
 
-      // TODO: Send this data to the backend via the provider
-      debugPrint('📋 Volunteer Application Data: $applicationData');
-
-      // Simulate API call
-      await Future.delayed(const Duration(seconds: 2));
+      // Submit via the volunteer provider
+      final volunteerProvider = Provider.of<VolunteerProvider>(
+        context,
+        listen: false,
+      );
+      final success = await volunteerProvider.submitVolunteerApplication(
+        applicationData,
+      );
 
       if (!mounted) return;
 
-      // Show success message
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              const Icon(Icons.check_circle, color: Colors.white),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Application submitted successfully!',
-                      style: TextStyle(fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      'Role: ${_specificRoleController.text.trim().isEmpty ? "General volunteer" : _specificRoleController.text.trim()}',
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                  ],
+      if (success) {
+        // Show success message
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.check_circle, color: Colors.white),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        'Application submitted successfully!',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        'Role: ${applicationData['specific_role']}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
+            backgroundColor: Colors.green,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            duration: const Duration(seconds: 4),
           ),
-          backgroundColor: Colors.green,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          duration: const Duration(seconds: 4),
-        ),
-      );
+        );
 
-      // Call the callback if provided
-      if (widget.onSubmit != null) {
-        widget.onSubmit!();
+        // Call the callback if provided
+        if (widget.onSubmit != null) {
+          widget.onSubmit!();
+        }
+
+        // Close dialog
+        Navigator.of(context).pop(true);
+      } else {
+        _showErrorMessage('Failed to submit application. Please try again.');
       }
-
-      // Close dialog
-      Navigator.of(context).pop(true);
     } catch (e) {
       if (!mounted) return;
       _showErrorMessage('Error submitting application: $e');
@@ -180,7 +174,9 @@ class _VolunteerApplicationDialogState
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Container(
         width: MediaQuery.of(context).size.width * 0.95,
-        height: MediaQuery.of(context).size.height * 0.85,
+        height:
+            MediaQuery.of(context).size.height *
+            0.75, // Reduced height for better scrolling
         padding: const EdgeInsets.all(24),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,7 +210,7 @@ class _VolunteerApplicationDialogState
                         ),
                       ),
                       Text(
-                        widget.activityTitle,
+                        widget.title,
                         style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                       ),
                     ],
@@ -226,78 +222,55 @@ class _VolunteerApplicationDialogState
                 ),
               ],
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
-            // Activity Information Card
+            // Activity Information Card (Condensed)
             Container(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
                 color: Colors.orange.shade50,
-                borderRadius: BorderRadius.circular(12),
+                borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.orange.shade200),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.event,
-                        color: Colors.orange.shade700,
-                        size: 18,
-                      ),
-                      const SizedBox(width: 8),
-                      Text(
-                        'Activity Details',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.orange.shade700,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
-                  _buildInfoRow(
-                    Icons.access_time,
-                    'Date & Time',
-                    _formatDateTime(widget.activityDateTime),
-                  ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    Icons.location_on,
-                    'Location',
-                    widget.activityLocation,
-                  ),
-                  const SizedBox(height: 8),
-                  _buildInfoRow(
-                    Icons.schedule,
-                    'Duration',
-                    '${widget.activityDurationHours} hours',
-                  ),
-                  const SizedBox(height: 12),
                   Text(
-                    'Description:',
+                    'Activity Details',
                     style: TextStyle(
+                      fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.orange.shade700,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 8),
                   Text(
-                    widget.activityDescription,
+                    '📅 ${_formatDateTime(widget.dateTime)}',
                     style: TextStyle(
-                      fontSize: 14,
+                      fontSize: 12,
                       color: Colors.orange.shade600,
-                      height: 1.4,
+                    ),
+                  ),
+                  Text(
+                    '📍 ${widget.location}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.orange.shade600,
+                    ),
+                  ),
+                  Text(
+                    '⏱️ ${widget.durationHours} hours',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.orange.shade600,
                     ),
                   ),
                 ],
               ),
             ),
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
 
-            // Application Form
+            // Application Form (More scrollable space)
             Expanded(
               child: Form(
                 key: _formKey,
@@ -305,94 +278,71 @@ class _VolunteerApplicationDialogState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Application Form',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
+                      // Preferred Role Field (Simplified)
+                      _buildSectionTitle('Preferred Role (Optional)'),
+                      TextFormField(
+                        controller: _specificRoleController,
+                        decoration: InputDecoration(
+                          hintText: 'e.g., Event setup, Registration, Cleanup',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(8),
+                            borderSide: const BorderSide(color: Colors.orange),
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 10,
+                          ),
                         ),
                       ),
                       const SizedBox(height: 16),
 
-                      // Specific Role/Position Field
-                      _buildSectionTitle('Specific Role/Position (Optional)'),
-                      TextFormField(
-                        controller: _specificRoleController,
-                        decoration: InputDecoration(
-                          hintText:
-                              'e.g., Pianist, MC, Registration assistant, Setup crew...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(color: Colors.orange),
-                          ),
-                          prefixIcon: const Icon(Icons.work_outline, size: 20),
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        'Specify if you want to volunteer for a particular role',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                      ),
-                      const SizedBox(height: 20),
-
-                      // Availability Selection
+                      // Availability Selection (Compact)
                       _buildSectionTitle('Your Availability *'),
-                      ...(_availabilityOptions.map(
-                        (option) => RadioListTile<String>(
-                          title: Text(
-                            option,
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          value: option,
-                          groupValue: _selectedAvailability,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedAvailability = value!;
-                            });
-                          },
-                          activeColor: Colors.orange,
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.grey.shade300),
+                          borderRadius: BorderRadius.circular(8),
                         ),
-                      )),
-                      const SizedBox(height: 20),
-
-                      // Commitment Level
-                      _buildSectionTitle('Commitment Level *'),
-                      ...(_commitmentOptions.map(
-                        (option) => RadioListTile<String>(
-                          title: Text(
-                            option,
-                            style: const TextStyle(fontSize: 14),
-                          ),
-                          value: option,
-                          groupValue: _selectedCommitment,
-                          onChanged: (value) {
-                            setState(() {
-                              _selectedCommitment = value!;
-                            });
-                          },
-                          activeColor: Colors.orange,
-                          contentPadding: EdgeInsets.zero,
-                          dense: true,
+                        child: Column(
+                          children:
+                              _availabilityOptions
+                                  .map(
+                                    (option) => RadioListTile<String>(
+                                      title: Text(
+                                        option,
+                                        style: const TextStyle(fontSize: 13),
+                                      ),
+                                      value: option,
+                                      groupValue: _selectedAvailability,
+                                      onChanged: (value) {
+                                        setState(() {
+                                          _selectedAvailability = value!;
+                                        });
+                                      },
+                                      activeColor: Colors.orange,
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 0,
+                                          ),
+                                      dense: true,
+                                      visualDensity: VisualDensity.compact,
+                                    ),
+                                  )
+                                  .toList(),
                         ),
-                      )),
-                      const SizedBox(height: 20),
-
-                      // Motivation
-                      _buildSectionTitle(
-                        'Why do you want to volunteer for this activity? *',
                       ),
+                      const SizedBox(height: 16),
+
+                      // Motivation (Pre-filled with realistic example)
+                      _buildSectionTitle('Why do you want to volunteer? *'),
                       TextFormField(
                         controller: _motivationController,
-                        maxLines: 4,
+                        maxLines: 3,
                         decoration: InputDecoration(
-                          hintText:
-                              'Share your motivation and what you hope to contribute...',
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(8),
                           ),
@@ -400,6 +350,7 @@ class _VolunteerApplicationDialogState
                             borderRadius: BorderRadius.circular(8),
                             borderSide: const BorderSide(color: Colors.orange),
                           ),
+                          contentPadding: const EdgeInsets.all(12),
                         ),
                         validator: (value) {
                           if (value == null || value.trim().isEmpty) {
@@ -411,26 +362,11 @@ class _VolunteerApplicationDialogState
                           return null;
                         },
                       ),
-                      const SizedBox(height: 20),
-
-                      // Experience
-                      _buildSectionTitle('Relevant Experience (Optional)'),
-                      TextFormField(
-                        controller: _experienceController,
-                        maxLines: 3,
-                        decoration: InputDecoration(
-                          hintText:
-                              'Any relevant skills, experience, or previous volunteer work...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                            borderSide: const BorderSide(color: Colors.orange),
-                          ),
-                        ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Feel free to edit the text above to personalize your application',
+                        style: TextStyle(fontSize: 11, color: Colors.grey[600]),
                       ),
-                      const SizedBox(height: 20),
                     ],
                   ),
                 ),
@@ -438,7 +374,7 @@ class _VolunteerApplicationDialogState
             ),
 
             // Action Buttons
-            const SizedBox(height: 24),
+            const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
@@ -449,7 +385,7 @@ class _VolunteerApplicationDialogState
                             : () => Navigator.of(context).pop(),
                     style: OutlinedButton.styleFrom(
                       side: const BorderSide(color: Colors.grey),
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -467,7 +403,7 @@ class _VolunteerApplicationDialogState
                     onPressed: _isSubmitting ? null : _submitApplication,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.orange,
-                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      padding: const EdgeInsets.symmetric(vertical: 14),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -513,29 +449,6 @@ class _VolunteerApplicationDialogState
           color: Colors.black87,
         ),
       ),
-    );
-  }
-
-  Widget _buildInfoRow(IconData icon, String label, String value) {
-    return Row(
-      children: [
-        Icon(icon, size: 16, color: Colors.orange.shade600),
-        const SizedBox(width: 8),
-        Text(
-          '$label: ',
-          style: TextStyle(
-            fontWeight: FontWeight.w600,
-            color: Colors.orange.shade700,
-            fontSize: 13,
-          ),
-        ),
-        Expanded(
-          child: Text(
-            value,
-            style: TextStyle(color: Colors.orange.shade600, fontSize: 13),
-          ),
-        ),
-      ],
     );
   }
 

@@ -77,7 +77,16 @@ urlpatterns = [
     path('instructor/approve-application/<int:application_id>/', views.approve_volunteer_application, name='instructor_approve_application'),
     path('instructor/reject-application/<int:application_id>/', views.reject_volunteer_application, name='instructor_reject_application'),
     path('instructor/all-applications/', views.get_all_volunteer_applications, name='instructor_all_applications'),
-    
+
+    path('admin/activities/', views.get_admin_activities, name='get_admin_activities'),
+    path('admin/dashboard/stats/', views.get_admin_dashboard_stats, name='admin_dashboard_stats'),
+    path('admin/analytics/', views.get_admin_analytics, name='admin_analytics'),
+    path('admin/users/', views.get_admin_users, name='admin_users'),
+    path('admin/volunteer-approvals/', views.get_admin_volunteer_approvals, name='admin_volunteer_approvals'),
+    path('admin/analytics/', views.get_admin_system_analytics, name='admin_system_analytics'),
+    path('admin/settings/', views.get_admin_settings, name='admin_system_settings'),
+    path('admin/users/all/', views.get_all_users_for_export, name='admin_users_all'),
+    path('admin/logs/', views.get_system_logs_for_export, name='admin_system_logs'),
     # =======================================
     # LEGACY COMPATIBILITY (if needed)
     # =======================================

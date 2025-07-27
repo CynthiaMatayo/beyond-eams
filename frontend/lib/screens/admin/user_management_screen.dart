@@ -1,7 +1,7 @@
-// lib/screens/admin/user_management_screen.dart
+// lib/screens/admin/user_management_screen.dart - COMPLETELY FIXED VERSION
 import 'package:flutter/material.dart';
 import '../../services/admin_service.dart';
-import '../../utils/constants.dart';
+import '../../widgets/admin_bottom_nav_bar.dart';
 
 class UserManagementScreen extends StatefulWidget {
   const UserManagementScreen({super.key});
@@ -14,7 +14,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   final AdminService _adminService = AdminService();
   final TextEditingController _searchController = TextEditingController();
 
-  List<User> _users = [];
+  List<Map<String, dynamic>> users = [];
   bool _isLoading = true;
   String _errorMessage = '';
   String _selectedRoleFilter = '';
@@ -34,90 +34,115 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
   }
 
   Future<void> _loadUsers() async {
+    if (!mounted) return;
+
     try {
       setState(() {
         _isLoading = true;
         _errorMessage = '';
       });
 
-      final users = await _adminService.getUsers(
+      final fetchedUsers = await _adminService.getUsers(
         page: _currentPage,
         pageSize: _pageSize,
-        searchQuery: _searchController.text.trim(),
+        searchQuery:
+            _searchController.text.trim().isEmpty
+                ? null
+                : _searchController.text.trim(),
         roleFilter: _selectedRoleFilter.isEmpty ? null : _selectedRoleFilter,
       );
 
-      setState(() {
-        _users = users;
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          users = fetchedUsers;
+          _isLoading = false;
+        });
+      }
     } catch (e) {
-      setState(() {
-        _errorMessage = 'Failed to load users: ${e.toString()}';
-        _isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'Failed to load users: ${e.toString()}';
+          _isLoading = false;
+        });
+      }
     }
   }
 
-  Future<void> _updateUserRole(User user, String newRole) async {
+  Future<void> _updateUserRole(
+    Map<String, dynamic> user,
+    String newRole,
+  ) async {
     try {
-      final success = await _adminService.updateUserRole(user.id, newRole);
-      if (success) {
+      final success = await _adminService.updateUserRole(
+        user['id'].toString(),
+        newRole,
+      );
+
+      if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('User role updated successfully')),
         );
-        _loadUsers(); // Refresh the list
+        _loadUsers();
       } else {
         throw Exception('Failed to update role');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating role: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating role: ${e.toString()}')),
+        );
+      }
     }
   }
 
-  Future<void> _toggleUserStatus(User user) async {
+  Future<void> _toggleUserStatus(Map<String, dynamic> user) async {
     try {
+      final isCurrentlyActive = user['is_active'] ?? true;
       final success = await _adminService.toggleUserStatus(
-        user.id,
-        !user.isActive,
+        user['id'].toString(),
+        !isCurrentlyActive,
       );
-      if (success) {
+
+      if (success && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              'User ${!user.isActive ? 'activated' : 'deactivated'} successfully',
+              'User ${!isCurrentlyActive ? 'activated' : 'deactivated'} successfully',
             ),
           ),
         );
-        _loadUsers(); // Refresh the list
+        _loadUsers();
       } else {
         throw Exception('Failed to update status');
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error updating status: ${e.toString()}')),
-      );
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Error updating status: ${e.toString()}')),
+        );
+      }
     }
   }
 
-  void _showRoleDialog(User user) {
+  void _showRoleDialog(Map<String, dynamic> user) {
+    final currentRole = user['role'] ?? 'student';
+    final userName = user['full_name'] ?? user['first_name'] ?? 'User';
+
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text('Change Role - ${user.fullName}'),
+            title: Text('Change Role - $userName'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               children:
-                  AppConstants.allRoles.map((role) {
+                  ['student', 'instructor', 'coordinator', 'admin'].map((role) {
                     return RadioListTile<String>(
                       title: Text(role.toUpperCase()),
                       value: role,
-                      groupValue: user.role,
+                      groupValue: currentRole,
                       onChanged: (String? value) {
-                        if (value != null && value != user.role) {
+                        if (value != null && value != currentRole) {
                           Navigator.pop(context);
                           _updateUserRole(user, value);
                         }
@@ -160,6 +185,10 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                     hintText: 'Search users by name or email...',
                     prefixIcon: Icon(Icons.search),
                     border: OutlineInputBorder(),
+                    contentPadding: EdgeInsets.symmetric(
+                      vertical: 12,
+                      horizontal: 16,
+                    ),
                   ),
                   onSubmitted: (_) => _loadUsers(),
                 ),
@@ -175,13 +204,22 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                         decoration: const InputDecoration(
                           labelText: 'Filter by Role',
                           border: OutlineInputBorder(),
+                          contentPadding: EdgeInsets.symmetric(
+                            vertical: 12,
+                            horizontal: 16,
+                          ),
                         ),
                         items: [
                           const DropdownMenuItem(
                             value: null,
                             child: Text('All Roles'),
                           ),
-                          ...AppConstants.allRoles.map(
+                          ...[
+                            'student',
+                            'instructor',
+                            'coordinator',
+                            'admin',
+                          ].map(
                             (role) => DropdownMenuItem(
                               value: role,
                               child: Text(role.toUpperCase()),
@@ -199,6 +237,14 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                     const SizedBox(width: 16),
                     ElevatedButton(
                       onPressed: _loadUsers,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 12,
+                        ),
+                      ),
                       child: const Text('Search'),
                     ),
                   ],
@@ -231,141 +277,160 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
             child:
                 _isLoading
                     ? const Center(child: CircularProgressIndicator())
-                    : _users.isEmpty
+                    : users.isEmpty
                     ? const Center(
                       child: Text(
                         'No users found',
                         style: TextStyle(fontSize: 16, color: Colors.grey),
                       ),
                     )
-                    : ListView.builder(
-                      itemCount: _users.length,
-                      itemBuilder: (context, index) {
-                        final user = _users[index];
-                        return Card(
-                          margin: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 4,
-                          ),
-                          child: ListTile(
-                            leading: CircleAvatar(
-                              backgroundColor: _getRoleColor(user.role),
-                              child: Text(
-                                user.firstName.substring(0, 1).toUpperCase(),
+                    : RefreshIndicator(
+                      onRefresh: _loadUsers,
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(bottom: 80),
+                        itemCount: users.length,
+                        itemBuilder: (context, index) {
+                          final user = users[index];
+                          final userName =
+                              user['full_name'] ??
+                              user['first_name'] ??
+                              'Unknown User';
+                          final userEmail = user['email'] ?? 'No email';
+                          final userRole = user['role'] ?? 'student';
+                          final isActive = user['is_active'] ?? true;
+                          final firstName =
+                              user['first_name'] ?? user['full_name'] ?? 'U';
+
+                          return Card(
+                            margin: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 4,
+                            ),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                backgroundColor: _getRoleColor(userRole),
+                                child: Text(
+                                  firstName.substring(0, 1).toUpperCase(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                userName,
                                 style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
+                                  fontWeight: FontWeight.w600,
                                 ),
                               ),
-                            ),
-                            title: Text(
-                              user.fullName,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.w600,
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(userEmail),
+                                  const SizedBox(height: 4),
+                                  Wrap(
+                                    spacing: 8,
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: _getRoleColor(userRole),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          userRole.toUpperCase(),
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color:
+                                              isActive
+                                                  ? Colors.green
+                                                  : Colors.red,
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: Text(
+                                          isActive ? 'ACTIVE' : 'INACTIVE',
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ],
                               ),
-                            ),
-                            subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(user.email),
-                                const SizedBox(height: 4),
-                                Row(
-                                  children: [
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color: _getRoleColor(user.role),
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        user.role.toUpperCase(),
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
+                              trailing: PopupMenuButton<String>(
+                                onSelected: (action) {
+                                  switch (action) {
+                                    case 'change_role':
+                                      _showRoleDialog(user);
+                                      break;
+                                    case 'toggle_status':
+                                      _toggleUserStatus(user);
+                                      break;
+                                  }
+                                },
+                                itemBuilder:
+                                    (context) => [
+                                      const PopupMenuItem(
+                                        value: 'change_role',
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.admin_panel_settings),
+                                            SizedBox(width: 8),
+                                            Text('Change Role'),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 2,
-                                      ),
-                                      decoration: BoxDecoration(
-                                        color:
-                                            user.isActive
-                                                ? Colors.green
-                                                : Colors.red,
-                                        borderRadius: BorderRadius.circular(12),
-                                      ),
-                                      child: Text(
-                                        user.isActive ? 'ACTIVE' : 'INACTIVE',
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.bold,
+                                      PopupMenuItem(
+                                        value: 'toggle_status',
+                                        child: Row(
+                                          children: [
+                                            Icon(
+                                              isActive
+                                                  ? Icons.block
+                                                  : Icons.check_circle,
+                                            ),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              isActive
+                                                  ? 'Deactivate'
+                                                  : 'Activate',
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                              ),
+                              onTap: () => _showUserDetails(user),
                             ),
-                            trailing: PopupMenuButton<String>(
-                              onSelected: (action) {
-                                switch (action) {
-                                  case 'change_role':
-                                    _showRoleDialog(user);
-                                    break;
-                                  case 'toggle_status':
-                                    _toggleUserStatus(user);
-                                    break;
-                                }
-                              },
-                              itemBuilder:
-                                  (context) => [
-                                    const PopupMenuItem(
-                                      value: 'change_role',
-                                      child: Row(
-                                        children: [
-                                          Icon(Icons.admin_panel_settings),
-                                          SizedBox(width: 8),
-                                          Text('Change Role'),
-                                        ],
-                                      ),
-                                    ),
-                                    PopupMenuItem(
-                                      value: 'toggle_status',
-                                      child: Row(
-                                        children: [
-                                          Icon(
-                                            user.isActive
-                                                ? Icons.block
-                                                : Icons.check_circle,
-                                          ),
-                                          const SizedBox(width: 8),
-                                          Text(
-                                            user.isActive
-                                                ? 'Deactivate'
-                                                : 'Activate',
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                            ),
-                            onTap: () => _showUserDetails(user),
-                          ),
-                        );
-                      },
+                          );
+                        },
+                      ),
                     ),
           ),
         ],
       ),
+      bottomNavigationBar: const AdminBottomNavBar(currentIndex: 1),
     );
   }
 
@@ -383,23 +448,29 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     }
   }
 
-  void _showUserDetails(User user) {
+  void _showUserDetails(Map<String, dynamic> user) {
+    final userName = user['full_name'] ?? user['first_name'] ?? 'Unknown User';
+    final userEmail = user['email'] ?? 'No email';
+    final userRole = user['role'] ?? 'student';
+    final isActive = user['is_active'] ?? true;
+    final dateJoined =
+        user['date_joined'] ??
+        user['created_at'] ??
+        DateTime.now().toIso8601String();
+
     showDialog(
       context: context,
       builder:
           (context) => AlertDialog(
-            title: Text('User Details - ${user.fullName}'),
+            title: Text('User Details - $userName'),
             content: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildDetailRow('Email', user.email),
-                _buildDetailRow('Role', user.role.toUpperCase()),
-                _buildDetailRow(
-                  'Status',
-                  user.isActive ? 'Active' : 'Inactive',
-                ),
-                _buildDetailRow('Joined', _formatDate(user.dateJoined)),
+                _buildDetailRow('Email', userEmail),
+                _buildDetailRow('Role', userRole.toUpperCase()),
+                _buildDetailRow('Status', isActive ? 'Active' : 'Inactive'),
+                _buildDetailRow('Joined', _formatDate(dateJoined)),
               ],
             ),
             actions: [
@@ -431,7 +502,12 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}/${date.month}/${date.year}';
+  String _formatDate(String dateString) {
+    try {
+      final date = DateTime.parse(dateString);
+      return '${date.day}/${date.month}/${date.year}';
+    } catch (e) {
+      return 'Unknown';
+    }
   }
 }

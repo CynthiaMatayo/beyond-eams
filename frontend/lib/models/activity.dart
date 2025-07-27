@@ -1,4 +1,4 @@
-// lib/models/activity.dart - FINAL FIXED VERSION
+// lib/models/activity.dart - FIXED VERSION
 import 'package:flutter/material.dart';
 
 class Activity {
@@ -91,23 +91,19 @@ class Activity {
     this.tags,
   });
 
-  // 🔧 FIX: Remove the conflicting getter/setter and use only the field
-  // REMOVED: int get enrollmentCount => enrolledCount;
-  // REMOVED: set enrollmentCount(int value) => enrolledCount = value;
-
-  // 🔧 FIX: Add only a getter that returns the field value
+  // FIXED: Add only a getter that returns the field value
   int get enrollmentCount => enrolledCount;
 
   // FIXED: getDynamicStatus method with debug output
   String getDynamicStatus() {
     final now = DateTime.now();
-    debugPrint('🔍 getDynamicStatus for "${this.title}":');
-    debugPrint('  - DB Status: "${this.status}"');
+    debugPrint('🔍 getDynamicStatus for "$title":');
+    debugPrint('  - DB Status: "$status"');
     debugPrint('  - Current Time: $now');
-    debugPrint('  - Start Time: ${this.startTime}');
-    debugPrint('  - End Time: ${this.endTime}');
-    debugPrint('  - Now before start? ${now.isBefore(this.startTime)}');
-    debugPrint('  - Now after end? ${now.isAfter(this.endTime)}');
+    debugPrint('  - Start Time: $startTime');
+    debugPrint('  - End Time: $endTime');
+    debugPrint('  - Now before start? ${now.isBefore(startTime)}');
+    debugPrint('  - Now after end? ${now.isAfter(endTime)}');
 
     // If explicitly draft or cancelled, keep those
     if (status.toLowerCase() == 'draft' ||
@@ -118,9 +114,9 @@ class Activity {
 
     // Calculate based on dates
     String result;
-    if (now.isBefore(this.startTime)) {
+    if (now.isBefore(startTime)) {
       result = 'upcoming';
-    } else if (now.isAfter(this.endTime)) {
+    } else if (now.isAfter(endTime)) {
       result = 'completed';
     } else {
       result = 'ongoing';
@@ -140,6 +136,12 @@ class Activity {
   bool get isOngoing => getDynamicStatus() == 'ongoing';
   bool get isDraft => status.toLowerCase() == 'draft';
   bool get isCancelled => status.toLowerCase() == 'cancelled';
+
+  // FIXED: Add compatibility getters for AdminService
+  DateTime get startDate => startTime;
+  DateTime get endDate => endTime;
+  String get coordinatorName => createdByName;
+  int get participantCount => enrolledCount;
 
   // ENHANCED: fromJson with better error handling and enrollment_count support
   factory Activity.fromJson(Map<String, dynamic> json) {
