@@ -8,7 +8,7 @@ plugins {
 android {
     namespace = "com.senior_project.beyondeams" 
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"  
+    // Removed ndkVersion to use the default stable version
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
