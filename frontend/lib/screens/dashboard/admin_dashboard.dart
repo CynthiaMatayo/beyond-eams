@@ -50,27 +50,29 @@ class _AdminDashboardState extends State<AdminDashboard> {
         });
       } catch (e) {
         debugPrint('❌ API Error: $e');
+        // The admin service already provides fallback data, so we should use that
+        // instead of hardcoded mock data
         setState(() {
-          _stats = {
-            'total_users': 15,
-            'new_users_this_month': 3,
-            'active_activities': 8,
-            'upcoming_activities': 12,
-            'system_health': 98,
-            'pending_issues': 0,
-          };
-          _analyticsData = {
-            'total_users': 15,
-            'avg_participation_rate': 87,
-            'active_sessions': 8,
-            'total_activities': 15,
-            'total_volunteer_hours': 162,
-            'avg_response_time': 145,
-          };
-          _recentActivities = [];
-          _errorMessage = 'Using offline data - server connection limited';
           _isLoading = false;
+          _errorMessage = 'Unable to connect to server. Showing fallback data.';
         });
+        
+        // Try to get fallback data from admin service
+        try {
+          final statsResult = await _adminService.getDashboardStats();
+          final analyticsResult = await _adminService.getSystemAnalytics();
+          
+          setState(() {
+            _stats = statsResult;
+            _analyticsData = analyticsResult;
+            _recentActivities = [];
+          });
+        } catch (fallbackError) {
+          debugPrint('❌ Fallback data error: $fallbackError');
+          setState(() {
+            _errorMessage = 'Failed to load dashboard data. Please check your connection.';
+          });
+        }
       }
     } catch (e) {
       setState(() {
@@ -437,6 +439,10 @@ class _AdminDashboardState extends State<AdminDashboard> {
   }
 
   Widget _buildAnalyticsChart() {
+    // Get user activity data from analytics, or show placeholder if not available
+    final totalUsers = _analyticsData?['total_users'] ?? 0;
+    final hasData = totalUsers > 0;
+    
     return Container(
       height: 200,
       decoration: BoxDecoration(
@@ -455,7 +461,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
                 ),
                 const Spacer(),
                 Text(
-                  'Total: 15 users',
+                  hasData ? 'Total: $totalUsers users' : 'No data available',
                   style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                 ),
               ],
@@ -464,19 +470,49 @@ class _AdminDashboardState extends State<AdminDashboard> {
           Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  _buildSimpleBar('Mon', 3, Colors.blue),
-                  _buildSimpleBar('Tue', 5, Colors.blue),
-                  _buildSimpleBar('Wed', 8, Colors.blue),
-                  _buildSimpleBar('Thu', 12, Colors.blue),
-                  _buildSimpleBar('Fri', 15, Colors.blue),
-                  _buildSimpleBar('Sat', 7, Colors.blue),
-                  _buildSimpleBar('Sun', 4, Colors.blue),
-                ],
-              ),
+              child: hasData 
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      // Use actual data if available from analytics API
+                      // For now, show zeros since we don't have real daily data
+                      _buildSimpleBar('Mon', 0, Colors.blue),
+                      _buildSimpleBar('Tue', 0, Colors.blue),
+                      _buildSimpleBar('Wed', 0, Colors.blue),
+                      _buildSimpleBar('Thu', 0, Colors.blue),
+                      _buildSimpleBar('Fri', 0, Colors.blue),
+                      _buildSimpleBar('Sat', 0, Colors.blue),
+                      _buildSimpleBar('Sun', 0, Colors.blue),
+                    ],
+                  )
+                : Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(
+                          Icons.analytics_outlined,
+                          size: 48,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Chart data not available',
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 14,
+                          ),
+                        ),
+                        Text(
+                          'Connect to server to view analytics',
+                          style: TextStyle(
+                            color: Colors.grey[500],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
             ),
           ),
           const SizedBox(height: 16),
@@ -487,7 +523,7 @@ class _AdminDashboardState extends State<AdminDashboard> {
 
   Widget _buildSimpleBar(String day, int value, Color color) {
     final maxHeight = 80.0;
-    final barHeight = (value / 15) * maxHeight;
+    final barHeight = value > 0 ? (value / 15) * maxHeight : 2.0; // Minimum height for visibility
 
     return Column(
       mainAxisAlignment: MainAxisAlignment.end,

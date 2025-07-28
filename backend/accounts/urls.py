@@ -23,4 +23,6 @@ urlpatterns = [
     path('admin/backup/', views.admin_create_backup, name='admin_create_backup'),
     path('admin/role-requests/', views.admin_get_role_requests, name='admin_get_role_requests'),
     path('admin/reports/system/', views.admin_get_system_reports, name='admin_get_system_reports'),
+    path('admin/system-stats/', views.admin_get_system_reports, name='admin_system_stats'),
+    path('admin/recent-activities/', views.admin_get_recent_activities, name='admin_recent_activities'),
 ]

@@ -49,8 +49,6 @@ class _DataExportScreenState extends State<DataExportScreen> {
     return 0.0;
   }
 
-// QUICK FIX: Replace your _loadExportData method with this:
-
   Future<void> _loadExportData() async {
     try {
       setState(() {
@@ -58,29 +56,58 @@ class _DataExportScreenState extends State<DataExportScreen> {
         _errorMessage = '';
       });
 
-      // ALWAYS use the working fallback data that matches your CSV export
-      final processedStats = {
-        'users': 15, 
-        'activities': 15, 
-        'registrations': 15, 
-        'attendance_records': 30,
-        'volunteer_applications': 8, 
-        'volunteering_hours': 45, 
-        'total_notifications': 20, 
-        'active_users': 14, 
-        'pending_applications': 2, 
-        'last_updated': DateTime.now().toIso8601String(),
-      };
+      // Try to get real data from admin service
+      try {
+        final stats = await _adminService.getDashboardStats();
+        final analytics = await _adminService.getSystemAnalytics();
+        
+        // Combine both API responses into export data
+        final processedStats = {
+          'users': stats['total_users'] ?? 0,
+          'activities': analytics['total_activities'] ?? 0,
+          'registrations': stats['active_activities'] ?? 0,
+          'attendance_records': analytics['total_volunteer_hours'] ?? 0,
+          'volunteer_applications': stats['pending_issues'] ?? 0,
+          'volunteering_hours': analytics['total_volunteer_hours'] ?? 0,
+          'total_notifications': 0, // No API endpoint for this yet
+          'active_users': analytics['active_sessions'] ?? 0,
+          'pending_applications': stats['pending_issues'] ?? 0,
+          'last_updated': DateTime.now().toIso8601String(),
+        };
 
-      setState(() {
-        _exportData = processedStats;
-        _totalRecords = _calculateTotalRecords(processedStats);
-        _isLoading = false;
-      });
+        setState(() {
+          _exportData = processedStats;
+          _totalRecords = _calculateTotalRecords(processedStats);
+          _isLoading = false;
+        });
+      } catch (apiError) {
+        debugPrint('❌ API Error, using fallback data: $apiError');
+        
+        // Use fallback data only when API fails
+        final fallbackStats = {
+          'users': 0,
+          'activities': 0,
+          'registrations': 0,
+          'attendance_records': 0,
+          'volunteer_applications': 0,
+          'volunteering_hours': 0,
+          'total_notifications': 0,
+          'active_users': 0,
+          'pending_applications': 0,
+          'last_updated': DateTime.now().toIso8601String(),
+        };
+
+        setState(() {
+          _exportData = fallbackStats;
+          _totalRecords = 0;
+          _isLoading = false;
+          _errorMessage = 'Using offline data - server connection limited';
+        });
+      }
     } catch (e) {
       debugPrint('❌ Error loading export data: $e');
       setState(() {
-        _errorMessage = 'Error loading data';
+        _errorMessage = 'Error loading data: ${e.toString()}';
         _isLoading = false;
       });
     }

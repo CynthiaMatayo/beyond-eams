@@ -235,6 +235,7 @@ class AuthProvider with ChangeNotifier {
 
     try {
       final response = await _apiService.register(
+        username,
         firstName,
         lastName,
         email,

@@ -1,4 +1,5 @@
 // lib/widgets/notification_bell.dart
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/notification_provider.dart';
@@ -17,8 +18,9 @@ class _NotificationBellState extends State<NotificationBell>
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
 
-  // Mock notification count (you can replace with real data)
-  int _notificationCount = 3;
+  // Get real notification count from API
+  int _notificationCount = 0;
+  Timer? _refreshTimer;
 
   @override
   void initState() {
@@ -34,6 +36,14 @@ class _NotificationBellState extends State<NotificationBell>
     // Load notifications when widget initializes
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadNotifications();
+      _startPeriodicRefresh();
+    });
+  }
+
+  void _startPeriodicRefresh() {
+    // Refresh notifications every 30 seconds
+    _refreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      _loadNotifications();
     });
   }
 
@@ -43,15 +53,23 @@ class _NotificationBellState extends State<NotificationBell>
         context,
         listen: false,
       );
-      await notificationProvider.loadNotificationSettings();
+      await notificationProvider.loadNotifications();
+      // Update notification count from provider
+      if (mounted) {
+        setState(() {
+          _notificationCount = notificationProvider.unreadCount;
+        });
+      }
     } catch (e) {
       debugPrint('Error loading notifications: $e');
+      // Keep default count of 0
     }
   }
 
   @override
   void dispose() {
     _animationController.dispose();
+    _refreshTimer?.cancel();
     super.dispose();
   }
 

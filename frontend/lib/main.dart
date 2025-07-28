@@ -28,6 +28,8 @@ import 'screens/activities/my_activities_screen.dart';
 import 'screens/activities/activity_qr_screen.dart';
 import 'screens/volunteer/volunteering_dashboard_screen.dart';
 import 'screens/volunteer/my_volunteer_applications_screen.dart';
+import 'screens/admin/system_reports_screen.dart';
+import 'screens/admin/system_reports_screen.dart';
 import 'screens/profile/my_profile_screen.dart';
 import 'screens/profile/edit_profile_screen.dart';
 import 'screens/instructor/instructor_main_screen.dart';
@@ -369,7 +371,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         '/admin/notifications': (context) => const AdminNotificationsScreen(),
         '/notifications': (context) => const AdminNotificationsScreen(),
         '/admin/data-export': (context) => const DataExportScreen(),
-        '/admin/analytics': (context) => const DashboardAnalytics(),
+        '/admin/analytics': (context) => const SystemReportsScreen(),
         // FIXED: Use existing volunteer screen - MyVolunteerApplicationsScreen
         '/admin/volunteers': (context) => const MyVolunteerApplicationsScreen(),
         '/admin/volunteer-applications':

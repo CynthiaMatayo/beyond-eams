@@ -4,6 +4,7 @@ from django.urls import path, include
 from django.http import JsonResponse
 from django.conf import settings
 from django.conf.urls.static import static
+from accounts import views as accounts_views
 
 def home(request):
     return JsonResponse({
@@ -52,6 +53,7 @@ urlpatterns = [
     
     # API routes - FIXED ORDER
     path('api/auth/', include('accounts.urls')),
+    path('api/notifications/', include('notifications.urls')),
     path('api/', include('activities.urls')),  # This includes coordinator/activities/
     path('api/instructor/', include('activities.urls')),
     path('api/admin/', include('activities.urls')),
@@ -60,6 +62,14 @@ urlpatterns = [
     path('api/admin/users/', admin_users, name='api_admin_users'),
     path('api/admin/system/', admin_system_reports, name='api_admin_system_reports'),
     path('api/admin/reports/', admin_system_reports, name='api_admin_reports'),
+    
+    # Specific admin endpoints for Flutter app
+    path('api/admin/system-stats/', accounts_views.admin_get_system_reports, name='admin_system_stats'),
+    path('api/admin/recent-activities/', accounts_views.admin_get_recent_activities, name='admin_recent_activities'),
+    
+    # Dashboard endpoints
+    path('api/admin/dashboard/stats/', accounts_views.admin_get_dashboard_stats, name='admin_dashboard_stats'),
+    path('api/admin/analytics/', accounts_views.admin_get_analytics, name='admin_analytics'),
 
 ]
 

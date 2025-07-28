@@ -21,13 +21,15 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
   String _errorMessage = '';
   String _selectedRoleFilter = '';
 
-  // Mock role distribution data
-  final Map<String, int> _roleDistribution = {
-    'student': 10,
-    'instructor': 1,
-    'coordinator': 2,
-    'admin': 2,
-  };
+  // Calculate role distribution from actual user data
+  Map<String, int> get _roleDistribution {
+    final distribution = <String, int>{};
+    for (final user in users) {
+      final role = user['role']?.toString().toLowerCase() ?? 'unknown';
+      distribution[role] = (distribution[role] ?? 0) + 1;
+    }
+    return distribution;
+  }
 
   @override
   void initState() {
@@ -407,7 +409,9 @@ class _RoleManagementScreenState extends State<RoleManagementScreen> {
                               leading: CircleAvatar(
                                 backgroundColor: _getRoleColor(userRole),
                                 child: Text(
-                                  firstName.substring(0, 1).toUpperCase(),
+                                  (firstName.isNotEmpty) 
+                                      ? firstName.substring(0, 1).toUpperCase()
+                                      : 'U',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

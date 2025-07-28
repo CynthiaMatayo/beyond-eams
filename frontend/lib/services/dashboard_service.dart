@@ -5,12 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class DashboardService {
   static const String baseUrl =
-      'http://127.0.0.1:8000/'; // Update with your backend URL
+      'http://127.0.0.1:8000'; // Update with your backend URL
 
   // Get authentication token
   static Future<String?> _getToken() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
+    return prefs.getString('access_token');
   }
 
   // Initialize service - THIS WAS MISSING

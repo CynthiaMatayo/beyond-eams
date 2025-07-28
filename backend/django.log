@@ -6252,3 +6252,652 @@ WARNING 2025-07-27 19:11:37,929 basehttp 6404 15000 "GET /api/activities/student
 INFO 2025-07-27 19:11:37,964 basehttp 6404 11184 "GET /api/student-volunteer-applications/?user_id=4 HTTP/1.1" 200 45
 INFO 2025-07-27 19:11:37,996 basehttp 6404 11184 "GET /api/student-volunteer-applications/?user_id=4 HTTP/1.1" 200 45
 INFO 2025-07-27 21:39:40,439 autoreload 10108 11924 Watching for file changes with StatReloader
+INFO 2025-07-28 01:37:06,393 autoreload 24028 26792 Watching for file changes with StatReloader
+INFO 2025-07-28 01:40:07,958 basehttp 24028 29648 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+WARNING 2025-07-28 01:40:09,255 log 24028 29648 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 01:40:09,256 basehttp 24028 29648 "POST /api/auth/login/ HTTP/1.1" 401 31
+WARNING 2025-07-28 01:40:30,591 log 24028 29648 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 01:40:30,592 basehttp 24028 29648 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 01:41:22,138 autoreload 20888 28772 Watching for file changes with StatReloader
+WARNING 2025-07-28 01:41:54,258 log 20888 22016 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 01:41:54,259 basehttp 20888 22016 "POST /api/auth/login/ HTTP/1.1" 401 31
+WARNING 2025-07-28 01:42:11,879 log 20888 22016 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 01:42:11,880 basehttp 20888 22016 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 01:46:58,742 autoreload 21168 25696 Watching for file changes with StatReloader
+INFO 2025-07-28 01:49:45,104 autoreload 19708 18348 Watching for file changes with StatReloader
+INFO 2025-07-28 01:50:59,672 basehttp 19708 22244 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+WARNING 2025-07-28 01:51:01,197 log 19708 22244 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 01:51:01,197 basehttp 19708 22244 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 01:51:36,553 basehttp 19708 29872 "GET / HTTP/1.1" 200 209
+WARNING 2025-07-28 01:51:36,737 log 19708 29872 Not Found: /favicon.ico
+WARNING 2025-07-28 01:51:36,738 basehttp 19708 29872 "GET /favicon.ico HTTP/1.1" 404 4679
+INFO 2025-07-28 01:52:51,534 basehttp 19708 20136 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+WARNING 2025-07-28 01:52:52,817 log 19708 20136 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 01:52:52,818 basehttp 19708 20136 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 01:54:39,208 autoreload 22976 17928 Watching for file changes with StatReloader
+INFO 2025-07-28 01:54:50,210 basehttp 19708 6380 "GET / HTTP/1.1" 200 209
+WARNING 2025-07-28 01:54:50,452 log 19708 6380 Not Found: /favicon.ico
+WARNING 2025-07-28 01:54:50,453 basehttp 19708 6380 "GET /favicon.ico HTTP/1.1" 404 4679
+WARNING 2025-07-28 01:54:58,894 log 19708 6380 Not Found: /admin
+WARNING 2025-07-28 01:54:58,894 basehttp 19708 6380 "GET /admin HTTP/1.1" 404 4655
+WARNING 2025-07-28 01:56:26,786 log 19708 24996 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 01:56:26,787 basehttp 19708 24996 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 01:59:33,088 basehttp 19708 5432 "POST /api/auth/login/ HTTP/1.1" 200 607
+INFO 2025-07-28 01:59:33,124 basehttp 19708 5432 "OPTIONS /api/activities/coordinator/activities/ HTTP/1.1" 200 0
+WARNING 2025-07-28 01:59:33,140 log 19708 5432 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 01:59:33,142 basehttp 19708 5432 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+INFO 2025-07-28 01:59:33,372 basehttp 19708 5432 "OPTIONS /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 200 0
+WARNING 2025-07-28 01:59:33,386 log 19708 5432 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 01:59:33,388 basehttp 19708 5432 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 01:59:33,720 basehttp 19708 14372 "OPTIONS /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 01:59:33,738 basehttp 19708 14372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 01:59:36,852 log 19708 5432 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 01:59:36,852 basehttp 19708 5432 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 01:59:37,042 log 19708 5432 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 01:59:37,043 basehttp 19708 5432 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 01:59:37,066 basehttp 19708 14372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 01:59:37,087 basehttp 19708 14372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 01:59:42,533 log 19708 5432 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 01:59:42,533 basehttp 19708 5432 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 01:59:42,748 log 19708 5432 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 01:59:42,749 basehttp 19708 5432 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 01:59:42,774 basehttp 19708 14372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 01:59:42,795 basehttp 19708 14372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 01:59:45,282 log 19708 5432 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 01:59:45,282 basehttp 19708 5432 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 01:59:45,409 basehttp 19708 14372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 02:00:07,481 basehttp 19708 5432 "OPTIONS /api/auth/me/ HTTP/1.1" 200 0
+WARNING 2025-07-28 02:00:07,504 log 19708 28864 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 02:00:07,521 log 19708 5432 Not Found: /api/auth/me/
+WARNING 2025-07-28 02:00:07,521 basehttp 19708 28864 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 02:00:07,527 basehttp 19708 5432 "GET /api/auth/me/ HTTP/1.1" 404 23467
+WARNING 2025-07-28 02:00:07,978 log 19708 5432 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 02:00:07,980 basehttp 19708 5432 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+WARNING 2025-07-28 02:00:55,355 log 19708 5432 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 02:00:55,356 basehttp 19708 5432 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 02:17:54,960 basehttp 19708 3768 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3316
+WARNING 2025-07-28 02:18:38,969 log 19708 3768 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 02:18:38,970 basehttp 19708 3768 "POST /api/auth/login/ HTTP/1.1" 401 31
+WARNING 2025-07-28 02:20:46,318 log 19708 16640 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 02:20:46,320 basehttp 19708 16640 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 02:23:33,739 basehttp 19708 22500 "POST /api/auth/login/ HTTP/1.1" 200 607
+INFO 2025-07-28 02:23:34,115 basehttp 19708 22312 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 02:23:51,585 log 19708 22500 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 02:23:51,588 basehttp 19708 22500 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 02:23:52,023 log 19708 22500 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 02:23:52,024 basehttp 19708 22500 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 02:23:52,107 basehttp 19708 22312 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 02:23:52,141 basehttp 19708 22312 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 02:41:14,300 log 19708 11632 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 02:41:14,301 basehttp 19708 11632 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 02:41:14,688 log 19708 11632 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 02:41:14,689 basehttp 19708 11632 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 02:41:15,048 basehttp 19708 6372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 02:41:15,076 basehttp 19708 6372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 02:41:23,695 log 19708 11632 Not Found: /api/auth/me/
+WARNING 2025-07-28 02:41:23,696 basehttp 19708 11632 "GET /api/auth/me/ HTTP/1.1" 404 23467
+INFO 2025-07-28 02:42:50,029 basehttp 19708 11632 "POST /api/auth/login/ HTTP/1.1" 200 607
+WARNING 2025-07-28 02:42:50,107 log 19708 11632 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 02:42:50,111 basehttp 19708 11632 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 02:42:50,544 log 19708 11632 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 02:42:50,546 basehttp 19708 11632 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 02:42:50,607 basehttp 19708 6372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 02:42:52,885 log 19708 11632 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 02:42:52,889 basehttp 19708 11632 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 02:42:52,955 log 19708 11632 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 02:42:52,957 basehttp 19708 11632 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 02:42:52,990 basehttp 19708 6372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 02:42:53,031 basehttp 19708 6372 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 02:55:45,894 basehttp 19708 17708 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+INFO 2025-07-28 02:55:48,195 basehttp 19708 17708 "POST /api/auth/login/ HTTP/1.1" 200 607
+INFO 2025-07-28 02:55:48,245 basehttp 19708 17708 "OPTIONS /api/activities/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 02:55:48,346 basehttp 19708 17708 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3316
+INFO 2025-07-28 02:55:48,398 basehttp 19708 17708 "OPTIONS /api/student-enrolled/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 02:55:48,415 basehttp 19708 17708 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 42
+INFO 2025-07-28 02:55:48,772 basehttp 19708 25172 "OPTIONS /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 02:55:48,801 basehttp 19708 25172 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 02:55:59,102 basehttp 19708 17708 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3316
+INFO 2025-07-28 02:55:59,239 basehttp 19708 17708 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 42
+INFO 2025-07-28 02:55:59,386 basehttp 19708 25172 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 02:55:59,427 basehttp 19708 25172 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:03:43,779 basehttp 19708 30036 "OPTIONS /api/auth/me/ HTTP/1.1" 200 0
+WARNING 2025-07-28 03:03:43,811 log 19708 30036 Not Found: /api/auth/me/
+WARNING 2025-07-28 03:03:43,819 basehttp 19708 30036 "GET /api/auth/me/ HTTP/1.1" 404 23467
+INFO 2025-07-28 03:03:43,868 basehttp 19708 28996 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3316
+INFO 2025-07-28 03:03:44,014 basehttp 19708 28996 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 42
+WARNING 2025-07-28 03:04:37,057 log 19708 19612 Not Found: /api/activities/coordinator/activities/
+WARNING 2025-07-28 03:04:37,059 basehttp 19708 19612 "GET /api/activities/coordinator/activities/ HTTP/1.1" 404 18852
+WARNING 2025-07-28 03:04:37,924 log 19708 19612 Not Found: /api/activities/student-enrolled/
+WARNING 2025-07-28 03:04:37,935 basehttp 19708 19612 "GET /api/activities/student-enrolled/?user_id=1 HTTP/1.1" 404 18838
+INFO 2025-07-28 03:04:38,283 basehttp 19708 25444 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:04:38,306 basehttp 19708 25444 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:05:42,625 basehttp 19708 28996 "POST /api/auth/login/ HTTP/1.1" 200 607
+INFO 2025-07-28 03:05:42,985 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:05:53,161 basehttp 19708 28996 "OPTIONS /api/activities/4/enroll/ HTTP/1.1" 200 0
+INFO 2025-07-28 03:05:53,220 basehttp 19708 28996 "POST /api/activities/4/enroll/ HTTP/1.1" 200 144
+INFO 2025-07-28 03:05:56,380 basehttp 19708 28996 "OPTIONS /api/activities/3/enroll/ HTTP/1.1" 200 0
+INFO 2025-07-28 03:05:56,433 basehttp 19708 28996 "POST /api/activities/3/enroll/ HTTP/1.1" 200 149
+INFO 2025-07-28 03:05:57,718 basehttp 19708 28996 "OPTIONS /api/activities/5/enroll/ HTTP/1.1" 200 0
+INFO 2025-07-28 03:05:57,771 basehttp 19708 28996 "POST /api/activities/5/enroll/ HTTP/1.1" 200 161
+INFO 2025-07-28 03:06:14,481 basehttp 19708 28996 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 03:06:14,674 basehttp 19708 28996 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 03:06:15,422 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:06:15,584 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:06:27,395 basehttp 19708 6908 "OPTIONS /api/volunteer-applications/ HTTP/1.1" 200 0
+WARNING 2025-07-28 03:06:27,529 log 19708 6908 Forbidden (Origin checking failed - http://localhost:8080 does not match any trusted origins.): /api/volunteer-applications/
+WARNING 2025-07-28 03:06:27,533 basehttp 19708 6908 "POST /api/volunteer-applications/ HTTP/1.1" 403 2554
+INFO 2025-07-28 03:06:31,446 basehttp 19708 28996 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 03:06:31,731 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:06:42,611 basehttp 19708 28996 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 03:06:42,767 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:07:12,823 basehttp 19708 28996 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 03:07:12,924 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:07:29,613 basehttp 19708 28996 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 03:07:29,779 basehttp 19708 28996 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 03:07:29,834 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:07:29,877 basehttp 19708 6908 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:52:53,362 autoreload 19708 18348 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\settings.py changed, reloading.
+INFO 2025-07-28 03:52:57,585 autoreload 13296 25444 Watching for file changes with StatReloader
+INFO 2025-07-28 03:53:16,260 autoreload 13296 25444 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\notifications\models.py changed, reloading.
+INFO 2025-07-28 03:53:18,488 autoreload 22944 5404 Watching for file changes with StatReloader
+INFO 2025-07-28 03:54:28,005 autoreload 22944 5404 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 03:54:31,127 autoreload 11980 27040 Watching for file changes with StatReloader
+INFO 2025-07-28 03:54:40,048 autoreload 11980 27040 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\notifications\admin.py changed, reloading.
+INFO 2025-07-28 03:54:42,914 autoreload 24024 27672 Watching for file changes with StatReloader
+INFO 2025-07-28 03:58:42,231 basehttp 24024 25316 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 03:58:42,538 basehttp 24024 25316 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 03:58:43,039 basehttp 24024 28952 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 03:58:43,089 basehttp 24024 28952 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:03:00,177 autoreload 24424 19944 Watching for file changes with StatReloader
+INFO 2025-07-28 04:07:24,591 autoreload 24424 19944 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 04:07:24,608 autoreload 24024 27672 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 04:07:27,345 autoreload 25396 21188 Watching for file changes with StatReloader
+INFO 2025-07-28 04:20:22,413 autoreload 12096 28472 Watching for file changes with StatReloader
+INFO 2025-07-28 04:21:11,334 basehttp 25396 3164 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+INFO 2025-07-28 04:21:13,396 basehttp 25396 3164 "POST /api/auth/login/ HTTP/1.1" 200 607
+INFO 2025-07-28 04:21:13,478 basehttp 25396 3164 "OPTIONS /api/activities/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 04:21:13,596 basehttp 25396 3164 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 04:21:13,680 basehttp 25396 3164 "OPTIONS /api/student-enrolled/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 04:21:13,697 basehttp 25396 3164 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 04:21:14,045 basehttp 25396 25816 "OPTIONS /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 04:21:14,069 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:21:16,426 basehttp 25396 3164 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 04:21:16,507 basehttp 25396 3164 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 04:21:16,559 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:21:16,603 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:21:32,954 basehttp 25396 3164 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 04:21:33,124 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:21:48,740 basehttp 25396 3164 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 04:21:48,953 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:21:53,418 basehttp 25396 3164 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 04:21:53,538 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:22:04,258 basehttp 25396 3164 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 04:22:04,354 basehttp 25396 3164 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 04:22:04,645 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 04:22:04,704 basehttp 25396 25816 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:04:38,687 autoreload 28420 27092 Watching for file changes with StatReloader
+INFO 2025-07-28 09:25:04,291 basehttp 25396 30288 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+INFO 2025-07-28 09:25:06,950 basehttp 25396 30288 "POST /api/auth/login/ HTTP/1.1" 200 607
+INFO 2025-07-28 09:25:07,003 basehttp 25396 30288 "OPTIONS /api/activities/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 09:25:07,142 basehttp 25396 30288 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 09:25:07,262 basehttp 25396 30288 "OPTIONS /api/student-enrolled/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 09:25:07,307 basehttp 25396 30288 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 09:25:07,667 basehttp 25396 23884 "OPTIONS /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 09:25:07,724 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:25:09,242 basehttp 25396 30288 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 09:25:09,495 basehttp 25396 30288 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 09:25:09,572 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:25:09,638 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:25:14,572 basehttp 25396 30288 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 09:25:14,783 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:25:25,753 basehttp 25396 30288 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 09:25:25,862 basehttp 25396 30288 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 09:25:25,927 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:25:25,977 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:26:01,196 basehttp 25396 30288 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 09:26:01,393 basehttp 25396 30288 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 09:26:01,506 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:26:01,683 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+WARNING 2025-07-28 09:26:27,486 log 25396 30288 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 09:26:27,491 basehttp 25396 30288 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 09:27:15,593 basehttp 25396 30288 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 09:27:15,805 basehttp 25396 30288 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 09:27:15,884 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:27:15,924 basehttp 25396 23884 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 09:27:49,441 basehttp 25396 30288 "OPTIONS /api/auth/register/ HTTP/1.1" 200 0
+WARNING 2025-07-28 09:27:49,447 log 25396 30288 Bad Request: /api/auth/register/
+WARNING 2025-07-28 09:27:49,449 basehttp 25396 30288 "POST /api/auth/register/ HTTP/1.1" 400 32
+WARNING 2025-07-28 09:27:52,367 log 25396 30288 Bad Request: /api/auth/register/
+WARNING 2025-07-28 09:27:52,368 basehttp 25396 30288 "POST /api/auth/register/ HTTP/1.1" 400 32
+INFO 2025-07-28 09:41:40,894 basehttp 25396 25368 "OPTIONS /api/auth/me/ HTTP/1.1" 200 0
+WARNING 2025-07-28 09:41:41,057 log 25396 25368 Not Found: /api/auth/me/
+WARNING 2025-07-28 09:41:41,059 basehttp 25396 25368 "GET /api/auth/me/ HTTP/1.1" 404 23628
+INFO 2025-07-28 09:42:37,411 basehttp 25396 25368 "POST /api/auth/register/ HTTP/1.1" 201 126
+INFO 2025-07-28 09:42:37,507 basehttp 25396 25368 "OPTIONS /api/activities/?user_id=5 HTTP/1.1" 200 0
+INFO 2025-07-28 09:42:37,834 basehttp 25396 25368 "GET /api/activities/?user_id=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:42:37,975 basehttp 25396 25368 "OPTIONS /api/student-enrolled/?user_id=5 HTTP/1.1" 200 0
+INFO 2025-07-28 09:42:37,997 basehttp 25396 25368 "GET /api/student-enrolled/?user_id=5 HTTP/1.1" 200 42
+INFO 2025-07-28 09:42:38,450 basehttp 25396 26424 "OPTIONS /api/student-volunteer-applications/?user_id=5 HTTP/1.1" 200 0
+INFO 2025-07-28 09:42:38,468 basehttp 25396 26424 "GET /api/student-volunteer-applications/?user_id=5 HTTP/1.1" 200 45
+INFO 2025-07-28 09:42:41,374 basehttp 25396 25368 "GET /api/activities/?user_id=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:42:41,477 basehttp 25396 25368 "GET /api/student-enrolled/?user_id=5 HTTP/1.1" 200 42
+INFO 2025-07-28 09:42:41,542 basehttp 25396 26424 "GET /api/student-volunteer-applications/?user_id=5 HTTP/1.1" 200 45
+INFO 2025-07-28 09:42:41,625 basehttp 25396 26424 "GET /api/student-volunteer-applications/?user_id=5 HTTP/1.1" 200 45
+WARNING 2025-07-28 09:42:55,721 log 25396 25368 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 09:42:55,723 basehttp 25396 25368 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 09:43:16,512 basehttp 25396 25368 "POST /api/auth/login/ HTTP/1.1" 200 611
+INFO 2025-07-28 09:43:23,073 basehttp 25396 25368 "GET /api/student-enrolled/?user_id=5 HTTP/1.1" 200 42
+INFO 2025-07-28 09:43:23,269 basehttp 25396 26424 "GET /api/student-volunteer-applications/?user_id=5 HTTP/1.1" 200 45
+INFO 2025-07-28 09:43:53,492 basehttp 25396 25368 "OPTIONS /api/activities/1/enroll/ HTTP/1.1" 200 0
+INFO 2025-07-28 09:43:53,542 basehttp 25396 25368 "POST /api/activities/1/enroll/ HTTP/1.1" 200 157
+INFO 2025-07-28 09:44:44,088 basehttp 25396 25368 "OPTIONS /api/auth/logout/ HTTP/1.1" 200 0
+WARNING 2025-07-28 09:44:44,174 log 25396 25368 Forbidden (Origin checking failed - http://localhost:60066 does not match any trusted origins.): /api/auth/logout/
+WARNING 2025-07-28 09:44:44,175 basehttp 25396 25368 "POST /api/auth/logout/ HTTP/1.1" 403 2555
+INFO 2025-07-28 09:47:19,693 basehttp 25396 25368 "POST /api/auth/login/ HTTP/1.1" 200 611
+INFO 2025-07-28 09:47:19,864 basehttp 25396 25368 "GET /api/activities/?user_id=5 HTTP/1.1" 200 3321
+INFO 2025-07-28 09:47:19,993 basehttp 25396 25368 "GET /api/student-enrolled/?user_id=5 HTTP/1.1" 200 467
+INFO 2025-07-28 09:47:20,081 basehttp 25396 26424 "GET /api/student-volunteer-applications/?user_id=5 HTTP/1.1" 200 45
+WARNING 2025-07-28 09:47:53,032 log 25396 25368 Forbidden (Origin checking failed - http://localhost:60066 does not match any trusted origins.): /api/auth/logout/
+WARNING 2025-07-28 09:47:53,036 basehttp 25396 25368 "POST /api/auth/logout/ HTTP/1.1" 403 2555
+WARNING 2025-07-28 09:49:51,489 log 25396 25368 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 09:49:51,490 basehttp 25396 25368 "POST /api/auth/login/ HTTP/1.1" 401 31
+WARNING 2025-07-28 09:54:33,772 log 25396 21968 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 09:54:33,774 basehttp 25396 21968 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 09:54:52,431 basehttp 25396 21968 "POST /api/auth/login/ HTTP/1.1" 200 619
+INFO 2025-07-28 09:54:52,501 basehttp 25396 21968 "OPTIONS /api/activities/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 09:54:52,586 basehttp 25396 21968 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:54:52,704 basehttp 25396 21968 "OPTIONS /api/student-enrolled/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 09:54:52,722 basehttp 25396 21968 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 09:54:53,117 basehttp 25396 22800 "OPTIONS /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 09:54:53,151 basehttp 25396 22800 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 09:54:54,363 basehttp 25396 21968 "OPTIONS /api/admin/dashboard/stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 09:54:54,373 basehttp 25396 21980 "OPTIONS /api/admin/analytics/? HTTP/1.1" 200 0
+INFO 2025-07-28 09:54:54,374 basehttp 25396 21968 "OPTIONS /api/activities/?page=1&page_size=5 HTTP/1.1" 200 0
+INFO 2025-07-28 09:54:54,406 basehttp 25396 21968 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 09:54:54,419 basehttp 25396 21980 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:54:54,472 basehttp 25396 3576 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 09:55:03,352 basehttp 25396 3576 "OPTIONS /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 0
+INFO 2025-07-28 09:55:03,364 basehttp 25396 3576 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:55:10,040 basehttp 25396 3576 "OPTIONS /api/admin/system-stats/ HTTP/1.1" 200 0
+WARNING 2025-07-28 09:55:10,089 log 25396 3576 Not Found: /api/admin/system-stats/
+WARNING 2025-07-28 09:55:10,090 basehttp 25396 3576 "GET /api/admin/system-stats/ HTTP/1.1" 404 33301
+INFO 2025-07-28 09:55:10,298 basehttp 25396 3576 "OPTIONS /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 0
+WARNING 2025-07-28 09:55:10,343 log 25396 3576 Not Found: /api/admin/recent-activities/
+WARNING 2025-07-28 09:55:10,346 basehttp 25396 3576 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 404 33330
+INFO 2025-07-28 09:55:14,282 basehttp 25396 3576 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 09:55:14,288 basehttp 25396 21980 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 09:55:14,612 basehttp 25396 21968 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:55:17,042 basehttp 25396 21968 "OPTIONS /api/admin/settings/ HTTP/1.1" 200 0
+INFO 2025-07-28 09:55:17,063 basehttp 25396 21968 "GET /api/admin/settings/ HTTP/1.1" 200 95
+INFO 2025-07-28 09:55:28,165 basehttp 25396 21968 "OPTIONS /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 0
+INFO 2025-07-28 09:55:28,185 basehttp 25396 21968 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:55:31,860 basehttp 25396 21980 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 09:55:31,862 basehttp 25396 21968 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 09:55:31,876 basehttp 25396 3576 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:55:36,795 basehttp 25396 3576 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:55:53,006 basehttp 25396 3576 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:55:56,598 basehttp 25396 3576 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:55:56,883 basehttp 25396 3576 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 09:55:56,985 basehttp 25396 22800 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 09:55:57,095 basehttp 25396 22800 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 09:55:59,397 basehttp 25396 21968 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 09:55:59,403 basehttp 25396 3576 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 09:55:59,426 basehttp 25396 21980 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+WARNING 2025-07-28 09:56:04,547 log 25396 21980 Not Found: /api/admin/system-stats/
+WARNING 2025-07-28 09:56:04,548 basehttp 25396 21980 "GET /api/admin/system-stats/ HTTP/1.1" 404 33301
+WARNING 2025-07-28 09:56:04,612 log 25396 21980 Not Found: /api/admin/recent-activities/
+WARNING 2025-07-28 09:56:04,614 basehttp 25396 21980 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 404 33330
+INFO 2025-07-28 09:56:08,674 basehttp 25396 21980 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 09:56:08,685 basehttp 25396 3576 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 09:56:08,698 basehttp 25396 21968 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:56:11,076 basehttp 25396 21968 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:56:13,975 basehttp 25396 21968 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 09:56:13,984 basehttp 25396 21980 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:56:13,989 basehttp 25396 3576 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 09:56:40,269 basehttp 25396 3576 "OPTIONS /api/activities/?page=1&page_size=100 HTTP/1.1" 200 0
+INFO 2025-07-28 09:56:40,304 basehttp 25396 3576 "GET /api/activities/?page=1&page_size=100 HTTP/1.1" 200 3315
+WARNING 2025-07-28 09:56:51,481 log 25396 3576 Not Found: /api/admin/system-stats/
+WARNING 2025-07-28 09:56:51,483 basehttp 25396 3576 "GET /api/admin/system-stats/ HTTP/1.1" 404 33301
+WARNING 2025-07-28 09:56:51,791 log 25396 3576 Not Found: /api/admin/recent-activities/
+WARNING 2025-07-28 09:56:51,796 basehttp 25396 3576 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 404 33330
+INFO 2025-07-28 09:56:55,666 basehttp 25396 3576 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:57:12,260 basehttp 25396 3576 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:57:16,000 basehttp 25396 3576 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 09:57:16,012 basehttp 25396 21980 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 09:57:16,049 basehttp 25396 21968 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 09:57:23,388 basehttp 25396 21968 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:57:29,443 basehttp 25396 21968 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 09:58:11,929 basehttp 25396 21968 "OPTIONS /api/notifications/send-notification/ HTTP/1.1" 200 0
+WARNING 2025-07-28 09:58:11,977 log 25396 21968 Forbidden (Origin checking failed - http://localhost:60066 does not match any trusted origins.): /api/notifications/send-notification/
+WARNING 2025-07-28 09:58:11,979 basehttp 25396 21968 "POST /api/notifications/send-notification/ HTTP/1.1" 403 2555
+WARNING 2025-07-28 09:58:13,963 log 25396 21968 Forbidden (Origin checking failed - http://localhost:60066 does not match any trusted origins.): /api/notifications/send-notification/
+WARNING 2025-07-28 09:58:13,966 basehttp 25396 21968 "POST /api/notifications/send-notification/ HTTP/1.1" 403 2555
+WARNING 2025-07-28 09:58:14,969 log 25396 21968 Forbidden (Origin checking failed - http://localhost:60066 does not match any trusted origins.): /api/notifications/send-notification/
+WARNING 2025-07-28 09:58:14,971 basehttp 25396 21968 "POST /api/notifications/send-notification/ HTTP/1.1" 403 2555
+WARNING 2025-07-28 09:58:15,271 log 25396 21968 Forbidden (Origin checking failed - http://localhost:60066 does not match any trusted origins.): /api/notifications/send-notification/
+WARNING 2025-07-28 09:58:15,273 basehttp 25396 21968 "POST /api/notifications/send-notification/ HTTP/1.1" 403 2555
+WARNING 2025-07-28 09:58:16,287 log 25396 21968 Forbidden (Origin checking failed - http://localhost:60066 does not match any trusted origins.): /api/notifications/send-notification/
+WARNING 2025-07-28 09:58:16,289 basehttp 25396 21968 "POST /api/notifications/send-notification/ HTTP/1.1" 403 2555
+INFO 2025-07-28 09:59:46,448 autoreload 28420 27092 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 09:59:46,523 autoreload 25396 21188 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 09:59:49,349 autoreload 28624 12972 Watching for file changes with StatReloader
+INFO 2025-07-28 09:59:49,350 autoreload 30016 23556 Watching for file changes with StatReloader
+INFO 2025-07-28 10:01:19,817 autoreload 28624 12972 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 10:01:19,909 autoreload 30016 23556 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 10:01:22,760 autoreload 18092 22012 Watching for file changes with StatReloader
+INFO 2025-07-28 10:01:22,791 autoreload 27764 26404 Watching for file changes with StatReloader
+INFO 2025-07-28 10:29:07,743 autoreload 20076 29312 Watching for file changes with StatReloader
+INFO 2025-07-28 10:34:48,652 autoreload 18172 27720 Watching for file changes with StatReloader
+INFO 2025-07-28 10:36:07,282 autoreload 27764 26404 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 10:36:08,704 autoreload 18172 27720 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 10:36:08,704 autoreload 20076 29312 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 10:36:08,750 autoreload 18092 22012 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 10:36:10,947 autoreload 18540 25780 Watching for file changes with StatReloader
+INFO 2025-07-28 10:36:12,262 autoreload 28336 2384 Watching for file changes with StatReloader
+INFO 2025-07-28 10:36:12,319 autoreload 29624 21152 Watching for file changes with StatReloader
+INFO 2025-07-28 10:36:12,348 autoreload 18376 21584 Watching for file changes with StatReloader
+INFO 2025-07-28 10:40:15,608 basehttp 18540 19280 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 10:40:15,738 basehttp 18540 19280 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 10:40:16,125 basehttp 18540 5844 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:40:16,167 basehttp 18540 5844 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:42:51,200 basehttp 18540 29056 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+WARNING 2025-07-28 10:42:53,507 log 18540 29056 Unauthorized: /api/auth/login/
+WARNING 2025-07-28 10:42:53,508 basehttp 18540 29056 "POST /api/auth/login/ HTTP/1.1" 401 31
+INFO 2025-07-28 10:43:34,848 basehttp 18540 29056 "POST /api/auth/login/ HTTP/1.1" 200 619
+INFO 2025-07-28 10:43:34,923 basehttp 18540 29056 "OPTIONS /api/activities/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 10:43:35,163 basehttp 18540 29056 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 10:43:35,265 basehttp 18540 29056 "OPTIONS /api/student-enrolled/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 10:43:35,301 basehttp 18540 29056 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 10:43:35,653 basehttp 18540 21100 "OPTIONS /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 10:43:35,683 basehttp 18540 21100 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:43:36,750 basehttp 18540 29056 "OPTIONS /api/admin/dashboard/stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 10:43:36,757 basehttp 18540 29056 "OPTIONS /api/admin/analytics/? HTTP/1.1" 200 0
+INFO 2025-07-28 10:43:36,757 basehttp 18540 12160 "OPTIONS /api/activities/?page=1&page_size=5 HTTP/1.1" 200 0
+INFO 2025-07-28 10:43:36,812 basehttp 18540 12160 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 10:43:36,833 basehttp 18540 29056 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 10:43:36,844 basehttp 18540 23148 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 10:44:08,567 basehttp 18540 23148 "OPTIONS /api/activities/?page=1&page_size=100 HTTP/1.1" 200 0
+INFO 2025-07-28 10:44:08,601 basehttp 18540 23148 "GET /api/activities/?page=1&page_size=100 HTTP/1.1" 200 3315
+INFO 2025-07-28 10:44:23,885 basehttp 18540 23148 "OPTIONS /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 0
+INFO 2025-07-28 10:44:23,907 basehttp 18540 23148 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 10:44:29,690 basehttp 18540 23148 "OPTIONS /api/admin/system-stats/ HTTP/1.1" 200 0
+WARNING 2025-07-28 10:44:29,714 log 18540 23148 Not Found: /api/admin/system-stats/
+WARNING 2025-07-28 10:44:29,716 basehttp 18540 23148 "GET /api/admin/system-stats/ HTTP/1.1" 404 33301
+INFO 2025-07-28 10:44:30,031 basehttp 18540 23148 "OPTIONS /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 0
+WARNING 2025-07-28 10:44:30,077 log 18540 23148 Not Found: /api/admin/recent-activities/
+WARNING 2025-07-28 10:44:30,079 basehttp 18540 23148 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 404 33330
+WARNING 2025-07-28 10:45:08,611 log 18540 30388 Not Found: /api/admin/system-stats/
+WARNING 2025-07-28 10:45:08,612 basehttp 18540 30388 "GET /api/admin/system-stats/ HTTP/1.1" 404 33301
+WARNING 2025-07-28 10:45:08,789 log 18540 30388 Not Found: /api/admin/recent-activities/
+WARNING 2025-07-28 10:45:08,790 basehttp 18540 30388 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 404 33330
+WARNING 2025-07-28 10:45:17,353 log 18540 30388 Not Found: /api/admin/system-stats/
+WARNING 2025-07-28 10:45:17,354 basehttp 18540 30388 "GET /api/admin/system-stats/ HTTP/1.1" 404 33301
+WARNING 2025-07-28 10:45:17,494 log 18540 30388 Not Found: /api/admin/recent-activities/
+WARNING 2025-07-28 10:45:17,542 basehttp 18540 30388 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 404 33330
+INFO 2025-07-28 10:45:25,244 basehttp 18540 30388 "OPTIONS /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 0
+INFO 2025-07-28 10:45:25,257 basehttp 18540 30388 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 10:46:23,852 basehttp 18540 30388 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+WARNING 2025-07-28 10:46:24,204 log 18540 30388 Not Found: /api/admin/system-stats/
+WARNING 2025-07-28 10:46:24,216 basehttp 18540 30388 "GET /api/admin/system-stats/ HTTP/1.1" 404 33301
+INFO 2025-07-28 10:46:24,290 basehttp 18540 30388 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+WARNING 2025-07-28 10:46:24,602 log 18540 30388 Not Found: /api/admin/recent-activities/
+WARNING 2025-07-28 10:46:24,609 basehttp 18540 30388 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 404 33330
+INFO 2025-07-28 10:46:24,863 basehttp 18540 29856 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:46:25,195 basehttp 18540 29856 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:46:31,348 basehttp 18540 30388 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 10:46:31,349 basehttp 18540 25316 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 10:46:31,389 basehttp 18540 16208 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 10:46:33,209 basehttp 18540 16208 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 10:47:08,961 autoreload 29624 21152 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:08,976 autoreload 18376 21584 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:09,025 autoreload 28336 2384 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:09,108 autoreload 18540 25780 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:12,566 autoreload 29692 23296 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:12,569 autoreload 29884 12816 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:12,699 autoreload 25972 26524 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:12,874 autoreload 28940 24272 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:25,302 autoreload 29884 12816 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:25,305 autoreload 28940 24272 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:25,322 autoreload 25972 26524 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:25,362 autoreload 29692 23296 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:27,853 autoreload 16108 4716 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:27,908 autoreload 18936 12884 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:27,908 autoreload 28780 12192 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:27,970 autoreload 22000 30364 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:34,512 autoreload 22000 30364 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:34,539 autoreload 18936 12884 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:34,593 autoreload 16108 4716 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:34,634 autoreload 28780 12192 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:47:36,575 autoreload 27760 16876 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:36,605 autoreload 29812 27468 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:36,635 autoreload 4752 720 Watching for file changes with StatReloader
+INFO 2025-07-28 10:47:36,668 autoreload 18368 21224 Watching for file changes with StatReloader
+INFO 2025-07-28 10:49:13,318 autoreload 4752 720 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:49:13,334 autoreload 18368 21224 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:49:13,348 autoreload 29812 27468 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 10:49:13,372 autoreload 27760 16876 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 10:49:17,515 autoreload 24816 19560 Watching for file changes with StatReloader
+INFO 2025-07-28 10:49:17,519 autoreload 26524 24100 Watching for file changes with StatReloader
+INFO 2025-07-28 10:49:17,548 autoreload 8280 27240 Watching for file changes with StatReloader
+INFO 2025-07-28 10:49:17,572 autoreload 20464 24784 Watching for file changes with StatReloader
+INFO 2025-07-28 10:55:36,816 autoreload 2540 6060 Watching for file changes with StatReloader
+INFO 2025-07-28 10:55:42,702 basehttp 24816 24216 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 10:55:42,834 basehttp 24816 24216 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 10:55:43,203 basehttp 24816 7328 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:55:43,614 basehttp 24816 7328 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:57:29,319 basehttp 24816 24216 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 10:57:29,477 basehttp 24816 24216 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 10:57:29,525 basehttp 24816 7328 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:57:29,561 basehttp 24816 7328 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 10:57:32,289 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:32,385 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 10:57:35,693 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:35,787 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 10:57:37,971 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:38,133 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 10:57:41,245 basehttp 24816 24216 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 10:57:45,834 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:46,094 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 10:57:47,797 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:47,902 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 10:57:54,659 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:54,770 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 10:57:56,003 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:56,149 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 10:57:56,917 basehttp 24816 24216 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 10:57:57,027 basehttp 24816 24216 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:01:27,096 autoreload 8376 15656 Watching for file changes with StatReloader
+INFO 2025-07-28 11:01:54,409 basehttp 24816 24216 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:01:54,559 basehttp 24816 24216 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 11:01:54,587 basehttp 24816 7328 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:01:54,621 basehttp 24816 7328 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:04:57,511 basehttp 8376 20392 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:00,604 basehttp 8376 20392 "POST /api/auth/login/ HTTP/1.1" 200 619
+INFO 2025-07-28 11:05:00,655 basehttp 8376 20392 "OPTIONS /api/activities/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:00,788 basehttp 8376 20392 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:05:00,877 basehttp 8376 20392 "OPTIONS /api/student-enrolled/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:00,896 basehttp 8376 20392 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 11:05:01,235 basehttp 8376 26996 "OPTIONS /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:01,253 basehttp 8376 26996 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:05:02,621 basehttp 8376 20392 "OPTIONS /api/admin/dashboard/stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:02,646 basehttp 8376 20392 "OPTIONS /api/activities/?page=1&page_size=5 HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:02,662 basehttp 8376 5236 "OPTIONS /api/admin/analytics/? HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:02,722 basehttp 8376 20392 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:05:02,780 basehttp 8376 27624 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:05:02,788 basehttp 8376 5236 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:05:06,349 basehttp 8376 5236 "OPTIONS /api/admin/system-stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:06,398 basehttp 8376 5236 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:05:06,730 basehttp 8376 5236 "OPTIONS /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 0
+INFO 2025-07-28 11:05:06,744 basehttp 8376 5236 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:05:08,607 basehttp 8376 5236 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:05:08,747 basehttp 8376 5236 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:05:09,596 basehttp 8376 5236 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:05:09,695 basehttp 8376 5236 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:08:25,476 basehttp 8376 5236 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:08:25,619 basehttp 8376 5236 "OPTIONS /api/auth/me/ HTTP/1.1" 200 0
+WARNING 2025-07-28 11:08:25,680 log 8376 5236 Not Found: /api/auth/me/
+WARNING 2025-07-28 11:08:25,690 basehttp 8376 5236 "GET /api/auth/me/ HTTP/1.1" 404 24610
+INFO 2025-07-28 11:08:25,693 basehttp 8376 27624 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:09:34,307 basehttp 8376 27624 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:09:34,406 basehttp 8376 27624 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:09:35,823 basehttp 8376 27624 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:09:35,902 basehttp 8376 27624 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:10:08,734 autoreload 8428 13940 Watching for file changes with StatReloader
+INFO 2025-07-28 11:12:47,462 basehttp 8428 8992 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:48,743 basehttp 8428 8992 "POST /api/auth/login/ HTTP/1.1" 200 619
+INFO 2025-07-28 11:12:48,788 basehttp 8428 8992 "OPTIONS /api/activities/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:48,946 basehttp 8428 8992 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:12:49,044 basehttp 8428 8992 "OPTIONS /api/student-enrolled/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:49,057 basehttp 8428 8992 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 11:12:49,452 basehttp 8428 30284 "OPTIONS /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:49,477 basehttp 8428 30284 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:12:50,417 basehttp 8428 8992 "OPTIONS /api/admin/dashboard/stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:50,428 basehttp 8428 2080 "OPTIONS /api/activities/?page=1&page_size=5 HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:50,428 basehttp 8428 8992 "OPTIONS /api/admin/analytics/? HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:50,452 basehttp 8428 2080 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:12:50,465 basehttp 8428 8992 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:12:50,467 basehttp 8428 26488 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:12:52,608 basehttp 8428 26488 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:12:52,724 basehttp 8428 26488 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 11:12:52,858 basehttp 8428 26488 "OPTIONS /api/admin/system-stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:52,870 basehttp 8428 26488 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:12:52,948 basehttp 8428 30284 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:12:52,991 basehttp 8428 26488 "OPTIONS /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 0
+INFO 2025-07-28 11:12:52,997 basehttp 8428 26488 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:12:53,043 basehttp 8428 30284 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:12:54,399 basehttp 8428 26488 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:12:54,677 basehttp 8428 26488 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:12:54,730 basehttp 8428 26488 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:12:54,754 basehttp 8428 26488 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:12:55,051 basehttp 8428 26488 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:12:55,287 basehttp 8428 26488 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:16:30,710 basehttp 8428 26488 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:16:30,811 basehttp 8428 26488 "OPTIONS /api/auth/me/ HTTP/1.1" 200 0
+WARNING 2025-07-28 11:16:30,832 log 8428 26488 Not Found: /api/auth/me/
+WARNING 2025-07-28 11:16:30,836 basehttp 8428 26488 "GET /api/auth/me/ HTTP/1.1" 404 24610
+INFO 2025-07-28 11:16:30,841 basehttp 8428 8992 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:16:48,223 basehttp 8428 8992 "OPTIONS /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 0
+INFO 2025-07-28 11:16:48,231 basehttp 8428 8992 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:16:50,280 basehttp 8428 8992 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:16:50,375 basehttp 8428 8992 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:16:56,263 basehttp 8428 8992 "OPTIONS /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 0
+INFO 2025-07-28 11:16:56,271 basehttp 8428 8992 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:16:58,162 basehttp 8428 8992 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:16:58,230 basehttp 8428 8992 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:17:00,178 basehttp 8428 8992 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:17:02,787 basehttp 8428 8992 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:17:04,986 basehttp 8428 8992 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:17:05,051 basehttp 8428 8992 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:17:07,287 basehttp 8428 26488 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:17:07,302 basehttp 8428 2080 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:17:07,311 basehttp 8428 8992 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:17:31,878 basehttp 8428 8992 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:17:31,923 basehttp 8428 8992 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:17:33,665 basehttp 8428 8992 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:17:35,065 basehttp 8428 2080 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:17:35,067 basehttp 8428 8992 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:17:35,074 basehttp 8428 26488 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:17:48,899 basehttp 8428 26488 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:17:50,412 basehttp 8428 26488 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:17:50,418 basehttp 8428 8992 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:17:50,427 basehttp 8428 2080 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:17:54,231 basehttp 8428 2080 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:17:54,281 basehttp 8428 2080 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:17:59,524 basehttp 8428 2080 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:18:02,374 basehttp 8428 2080 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:18:02,475 basehttp 8428 8992 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:18:02,649 basehttp 8428 26488 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:23:00,000 basehttp 8428 2080 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:23:00,004 basehttp 8428 26488 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:23:00,022 basehttp 8428 8992 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+WARNING 2025-07-28 11:23:00,167 log 8428 8992 Not Found: /api/auth/me/
+WARNING 2025-07-28 11:23:00,169 basehttp 8428 8992 "GET /api/auth/me/ HTTP/1.1" 404 24610
+INFO 2025-07-28 11:23:20,985 basehttp 8428 8992 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:23:23,064 basehttp 8428 8992 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:23:23,075 basehttp 8428 26488 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:23:23,076 basehttp 8428 2080 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:24:56,988 autoreload 4996 19760 Watching for file changes with StatReloader
+INFO 2025-07-28 11:25:45,062 basehttp 4996 2876 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:25:47,036 basehttp 4996 25904 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:25:47,045 basehttp 4996 8280 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:25:47,050 basehttp 4996 2876 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:29:44,634 autoreload 4996 19760 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\beyond_eams\urls.py changed, reloading.
+INFO 2025-07-28 11:29:45,894 autoreload 7912 18348 Watching for file changes with StatReloader
+INFO 2025-07-28 11:30:26,815 autoreload 7912 18348 C:\Users\Brian Cheruiyot\Desktop\girls\beyond-eams\backend\accounts\views.py changed, reloading.
+INFO 2025-07-28 11:30:28,029 autoreload 26060 27560 Watching for file changes with StatReloader
+INFO 2025-07-28 11:32:33,941 autoreload 24956 26764 Watching for file changes with StatReloader
+INFO 2025-07-28 11:32:40,052 basehttp 24956 9508 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:32:40,059 basehttp 24956 23048 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:32:40,074 basehttp 24956 12972 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+WARNING 2025-07-28 11:32:40,179 log 24956 12972 Not Found: /api/auth/me/
+WARNING 2025-07-28 11:32:40,180 basehttp 24956 12972 "GET /api/auth/me/ HTTP/1.1" 404 24996
+INFO 2025-07-28 11:33:07,744 basehttp 24956 12972 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:33:07,748 basehttp 24956 9508 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:33:07,755 basehttp 24956 23048 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+WARNING 2025-07-28 11:33:07,851 log 24956 23048 Not Found: /api/auth/me/
+WARNING 2025-07-28 11:33:07,852 basehttp 24956 23048 "GET /api/auth/me/ HTTP/1.1" 404 24996
+INFO 2025-07-28 11:33:11,511 basehttp 24956 23048 - Broken pipe from ('127.0.0.1', 56277)
+INFO 2025-07-28 11:33:11,514 basehttp 24956 12972 - Broken pipe from ('127.0.0.1', 56276)
+INFO 2025-07-28 11:33:11,514 basehttp 24956 9508 - Broken pipe from ('127.0.0.1', 56275)
+INFO 2025-07-28 11:33:23,271 autoreload 10356 30592 Watching for file changes with StatReloader
+INFO 2025-07-28 11:34:48,082 basehttp 10356 22080 "OPTIONS /api/auth/login/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:34:49,753 basehttp 10356 22080 "POST /api/auth/login/ HTTP/1.1" 200 607
+INFO 2025-07-28 11:34:49,783 basehttp 10356 22080 "OPTIONS /api/activities/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 11:34:49,854 basehttp 10356 22080 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 11:34:49,909 basehttp 10356 22080 "OPTIONS /api/student-enrolled/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 11:34:49,922 basehttp 10356 22080 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 11:34:50,247 basehttp 10356 11276 "OPTIONS /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 0
+INFO 2025-07-28 11:34:50,262 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:34:54,759 basehttp 10356 22080 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 11:34:54,905 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:35:01,279 basehttp 10356 22080 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 11:35:01,525 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:35:04,417 basehttp 10356 22080 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 11:35:04,484 basehttp 10356 22080 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 11:35:04,617 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:35:04,668 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:35:37,642 basehttp 10356 22080 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 11:35:37,829 basehttp 10356 22080 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 11:35:37,942 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:35:38,072 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:35:44,845 basehttp 10356 22080 "GET /api/activities/?user_id=1 HTTP/1.1" 200 3333
+INFO 2025-07-28 11:35:44,952 basehttp 10356 22080 "GET /api/student-enrolled/?user_id=1 HTTP/1.1" 200 1304
+INFO 2025-07-28 11:35:45,030 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:35:45,056 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=1 HTTP/1.1" 200 45
+INFO 2025-07-28 11:36:03,911 basehttp 10356 22080 "POST /api/auth/login/ HTTP/1.1" 200 619
+INFO 2025-07-28 11:36:04,696 basehttp 10356 22080 "OPTIONS /api/admin/dashboard/stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:04,705 basehttp 10356 26684 "OPTIONS /api/admin/analytics/? HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:04,705 basehttp 10356 22080 "OPTIONS /api/activities/?page=1&page_size=5 HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:04,724 basehttp 10356 22080 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:36:04,742 basehttp 10356 26684 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:36:04,746 basehttp 10356 30112 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:36:06,621 basehttp 10356 30112 "OPTIONS /api/activities/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:06,671 basehttp 10356 30112 "GET /api/activities/?user_id=6 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:36:06,711 basehttp 10356 30112 "OPTIONS /api/student-enrolled/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:06,725 basehttp 10356 30112 "GET /api/student-enrolled/?user_id=6 HTTP/1.1" 200 42
+INFO 2025-07-28 11:36:06,740 basehttp 10356 11276 "OPTIONS /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:06,752 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:36:06,775 basehttp 10356 11276 "GET /api/student-volunteer-applications/?user_id=6 HTTP/1.1" 200 45
+INFO 2025-07-28 11:36:12,355 basehttp 10356 30112 "OPTIONS /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:12,363 basehttp 10356 30112 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:36:13,792 basehttp 10356 30112 "OPTIONS /api/admin/system-stats/ HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:13,811 basehttp 10356 30112 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:36:13,892 basehttp 10356 30112 "OPTIONS /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:13,901 basehttp 10356 30112 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:36:15,676 basehttp 10356 30112 "OPTIONS /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 0
+INFO 2025-07-28 11:36:15,684 basehttp 10356 30112 "GET /api/admin/users/?page=1&page_size=100 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:36:22,352 basehttp 10356 30112 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:36:23,553 basehttp 10356 26684 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:36:23,553 basehttp 10356 30112 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:36:23,568 basehttp 10356 22080 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:36:26,500 basehttp 10356 22080 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:36:26,587 basehttp 10356 22080 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:36:27,942 basehttp 10356 22080 "GET /api/admin/users/?page=1&page_size=20 HTTP/1.1" 200 1269
+INFO 2025-07-28 11:36:29,415 basehttp 10356 30112 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:36:29,415 basehttp 10356 22080 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:36:29,429 basehttp 10356 26684 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315
+INFO 2025-07-28 11:36:31,554 basehttp 10356 26684 "GET /api/admin/system-stats/ HTTP/1.1" 200 438
+INFO 2025-07-28 11:36:31,631 basehttp 10356 26684 "GET /api/admin/recent-activities/?limit=10 HTTP/1.1" 200 861
+INFO 2025-07-28 11:36:37,423 basehttp 10356 26684 "GET /api/admin/dashboard/stats/ HTTP/1.1" 200 126
+INFO 2025-07-28 11:36:37,430 basehttp 10356 22080 "GET /api/admin/analytics/? HTTP/1.1" 200 139
+INFO 2025-07-28 11:36:37,446 basehttp 10356 30112 "GET /api/activities/?page=1&page_size=5 HTTP/1.1" 200 3315

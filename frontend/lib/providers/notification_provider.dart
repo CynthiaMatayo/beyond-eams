@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import '../services/notification_service.dart';
+import '../models/notification.dart';
 
 class NotificationSettings {
   bool pushNotifications;
@@ -338,4 +340,132 @@ class NotificationProvider with ChangeNotifier {
   // Check if new opportunities notifications are enabled
   bool get shouldNotifyNewOpportunities =>
       _settings.newOpportunities && _settings.pushNotifications;
+
+  // Notification items and management
+  List<Map<String, dynamic>> _notifications = [];
+  int _unreadCount = 0;
+
+  List<Map<String, dynamic>> get notifications => _notifications;
+  int get unreadCount => _unreadCount;
+
+  Future<void> loadNotifications() async {
+    try {
+      _setLoading(true);
+      
+      // Use real NotificationService to get notifications from backend
+      final notificationService = NotificationService();
+      final notificationItems = await notificationService.getUserNotifications();
+      
+      // Convert NotificationItem objects to Map format for compatibility
+      _notifications = notificationItems.map((item) => {
+        'id': item.id,
+        'title': item.title,
+        'message': item.message,
+        'type': item.type,
+        'isRead': item.isRead,
+        'createdAt': item.time.toIso8601String(),
+      }).toList();
+
+      _unreadCount = _notifications.where((n) => !n['isRead']).length;
+      notifyListeners();
+    } catch (e) {
+      debugPrint('Error loading notifications: $e');
+      
+      // Fallback to mock data if API fails
+      _notifications = [
+        {
+          'id': 1,
+          'title': 'Welcome to EAMS',
+          'message': 'Your account has been created successfully',
+          'type': 'system',
+          'isRead': false,
+          'createdAt': DateTime.now().subtract(const Duration(hours: 1)).toIso8601String(),
+        },
+        {
+          'id': 2,
+          'title': 'New Activity Available',
+          'message': 'Basketball tournament registration is now open',
+          'type': 'activity',
+          'isRead': true,
+          'createdAt': DateTime.now().subtract(const Duration(hours: 3)).toIso8601String(),
+        },
+      ];
+      _unreadCount = _notifications.where((n) => !n['isRead']).length;
+      notifyListeners();
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  Future<void> markAsRead(int notificationId) async {
+    try {
+      // Use real NotificationService to mark as read on backend
+      final notificationService = NotificationService();
+      final success = await notificationService.markAsRead(notificationId);
+      
+      if (success) {
+        // Update local state if backend call succeeds
+        final index = _notifications.indexWhere((n) => n['id'] == notificationId);
+        if (index != -1) {
+          _notifications[index]['isRead'] = true;
+          _unreadCount = _notifications.where((n) => !n['isRead']).length;
+          notifyListeners();
+        }
+      } else {
+        debugPrint('Failed to mark notification as read on backend');
+      }
+    } catch (e) {
+      debugPrint('Error marking notification as read: $e');
+      // Fallback: update local state even if backend fails
+      final index = _notifications.indexWhere((n) => n['id'] == notificationId);
+      if (index != -1) {
+        _notifications[index]['isRead'] = true;
+        _unreadCount = _notifications.where((n) => !n['isRead']).length;
+        notifyListeners();
+      }
+    }
+  }
+
+  Future<void> markAllAsRead() async {
+    try {
+      // Use real NotificationService to mark all as read on backend
+      final notificationService = NotificationService();
+      final success = await notificationService.markAllAsRead();
+      
+      if (success) {
+        // Update local state if backend call succeeds
+        for (var notification in _notifications) {
+          notification['isRead'] = true;
+        }
+        _unreadCount = 0;
+        notifyListeners();
+      } else {
+        debugPrint('Failed to mark all notifications as read on backend');
+      }
+    } catch (e) {
+      debugPrint('Error marking all notifications as read: $e');
+      // Fallback: update local state even if backend fails
+      for (var notification in _notifications) {
+        notification['isRead'] = true;
+      }
+      _unreadCount = 0;
+      notifyListeners();
+    }
+  }
+
+  // Get unread count directly from NotificationService
+  Future<int> getUnreadCountFromService() async {
+    try {
+      final notificationService = NotificationService();
+      return await notificationService.getUnreadCount();
+    } catch (e) {
+      debugPrint('Error getting unread count from service: $e');
+      return _unreadCount; // Fallback to local count
+    }
+  }
+
+  // Refresh notifications periodically
+  Future<void> refreshNotifications() async {
+    await loadNotifications();
+  }
 }

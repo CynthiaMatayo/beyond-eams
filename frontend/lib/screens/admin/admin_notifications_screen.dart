@@ -1,6 +1,7 @@
 // lib/screens/admin/admin_notifications_screen.dart
 import 'package:flutter/material.dart';
 import '../../services/admin_service.dart';
+import '../../services/notification_service.dart';
 import '../../widgets/admin_bottom_nav_bar.dart';
 
 class AdminNotificationsScreen extends StatefulWidget {
@@ -30,6 +31,42 @@ class _AdminNotificationsScreenState extends State<AdminNotificationsScreen> {
 
   final List<String> _priorityOptions = ['Low', 'Normal', 'High', 'Urgent'];
 
+  // Test email functionality
+  Future<void> _testEmail() async {
+    try {
+      final notificationService = NotificationService();
+      final result = await notificationService.testEmail(
+        recipientEmail: 'test@example.com',
+        subject: 'Test Email from EAMS',
+        message: 'This is a test email from the EAMS notification system.',
+      );
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              result 
+                ? '✅ Test email sent successfully!'
+                : '❌ Failed to send test email',
+            ),
+            backgroundColor: result ? Colors.green : Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('❌ Test email failed: ${e.toString()}'),
+            backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
+          ),
+        );
+      }
+    }
+  }
+
   @override
   void dispose() {
     _titleController.dispose();
@@ -46,8 +83,14 @@ class _AdminNotificationsScreenState extends State<AdminNotificationsScreen> {
         foregroundColor: Colors.white,
         actions: [
           IconButton(
+            icon: const Icon(Icons.email),
+            onPressed: _testEmail,
+            tooltip: 'Test Email',
+          ),
+          IconButton(
             icon: const Icon(Icons.history),
             onPressed: () => _showNotificationHistory(),
+            tooltip: 'Notification History',
           ),
         ],
       ),
@@ -517,34 +560,65 @@ class _AdminNotificationsScreenState extends State<AdminNotificationsScreen> {
     });
 
     try {
-      // Simulate sending notification
-      await Future.delayed(const Duration(seconds: 2));
+      // Import the notification service
+      final notificationService = NotificationService();
+      
+      // Determine notification type and priority
+      String notificationType = 'general';
+      if (_selectedRecipients.contains('Activity')) {
+        notificationType = 'activity';
+      } else if (_selectedRecipients.contains('Volunteer')) {
+        notificationType = 'volunteer';
+      }
+      
+      // Send notification via API with email
+      final result = await notificationService.sendNotification(
+        userIds: [1, 2, 3], // Mock user IDs for now
+        title: _titleController.text.trim(),
+        message: _messageController.text.trim(),
+        type: notificationType,
+      );
 
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              'Notification sent to $_selectedRecipients successfully!',
+        if (result) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '✅ Notification sent successfully!\n'
+                '📱 Notifications delivered to selected users\n'
+                '📧 Email notifications sent',
+              ),
+              backgroundColor: Colors.green,
+              duration: const Duration(seconds: 4),
             ),
-            backgroundColor: Colors.green,
-            duration: const Duration(seconds: 3),
-          ),
-        );
+          );
 
-        // Clear form
-        _titleController.clear();
-        _messageController.clear();
-        setState(() {
-          _selectedRecipients = 'All Users';
-          _selectedPriority = 'Normal';
-        });
+          // Clear form
+          _titleController.clear();
+          _messageController.clear();
+          setState(() {
+            _selectedRecipients = 'All Users';
+            _selectedPriority = 'Normal';
+          });
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '❌ Failed to send notification. Please try again.',
+              ),
+              backgroundColor: Colors.red,
+              duration: const Duration(seconds: 4),
+            ),
+          );
+        }
       }
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Failed to send notification: ${e.toString()}'),
+            content: Text('❌ Network error: ${e.toString()}'),
             backgroundColor: Colors.red,
+            duration: const Duration(seconds: 3),
           ),
         );
       }

@@ -8,7 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/activity.dart';
 
 class CoordinatorService {
-  static const String _baseUrl = 'http://localhost:8000/api';
+  static const String _baseUrl = 'http://127.0.0.1:8000/api';
   static String? _authToken;
 
   // FIXED: Store promoted activities locally with SharedPreferences
@@ -547,16 +547,9 @@ class CoordinatorService {
       throw Exception(response['message'] ?? 'Failed to fetch categories');
     } catch (e) {
       debugPrint('❌ Error in getActivityCategories: $e');
+      // Return minimal fallback data instead of full mock categories
       return [
-        {'id': 1, 'name': 'Academic', 'description': 'Academic activities'},
-        {'id': 2, 'name': 'Sports', 'description': 'Sports activities'},
-        {'id': 3, 'name': 'Cultural', 'description': 'Cultural activities'},
-        {
-          'id': 4,
-          'name': 'Community Service',
-          'description': 'Community service activities',
-        },
-        {'id': 5, 'name': 'Technology', 'description': 'Technology activities'},
+        {'id': 0, 'name': 'General', 'description': 'General activities'},
       ];
     }
   }
@@ -584,9 +577,9 @@ class CoordinatorService {
         'activity_title': activity.title,
         'template_name': template['name'],
         'promoted_at': DateTime.now().toIso8601String(),
-        'views': Random().nextInt(200) + 50,
-        'new_enrollments': Random().nextInt(15) + 3,
-        'promotions_sent': alreadyPromoted ? Random().nextInt(3) + 1 : 1,
+        'views': 0, // Real view data would come from analytics API
+        'new_enrollments': 0, // Real enrollment data would come from database
+        'promotions_sent': alreadyPromoted ? 1 : 1, // Real promotion count from database
       };
 
       existingData.add(jsonEncode(promotionRecord));
@@ -778,7 +771,7 @@ class CoordinatorService {
         'thisWeek': thisWeekPromotions,
         'avgReach':
             totalPromotions > 0 ? (totalReach / totalPromotions).round() : 0,
-        'engagement': totalPromotions > 0 ? (65 + Random().nextInt(30)) : 0,
+        'engagement': totalPromotions > 0 ? 0 : 0, // Real engagement would come from analytics API
       };
 
       return stats;
@@ -900,13 +893,13 @@ class CoordinatorService {
 
       final analytics = {
         'totalReach': totalReach,
-        'reachChange': '+${12 + Random().nextInt(20)}%',
-        'engagementRate': 75 + Random().nextInt(20),
-        'engagementChange': '+${5 + Random().nextInt(15)}%',
+        'reachChange': '+0%', // Real data would come from time comparison
+        'engagementRate': 0, // Real data would come from analytics API
+        'engagementChange': '+0%', // Real data would come from time comparison
         'newEnrollments': totalEnrollments,
-        'enrollmentChange': '+${8 + Random().nextInt(25)}%',
+        'enrollmentChange': '+0%', // Real data would come from time comparison
         'conversionRate': conversionRate.round(),
-        'conversionChange': '+${3 + Random().nextInt(12)}%',
+        'conversionChange': '+0%', // Real data would come from time comparison
       };
       debugPrint('✅ Calculated promotion analytics: $analytics');
       return analytics;
@@ -1024,7 +1017,7 @@ class CoordinatorService {
           promotedActivities.take(3).map((activity) {
             return {
               'title': activity.title,
-              'engagement': 70 + Random().nextInt(25),
+              'engagement': 0, // Real engagement data would come from analytics API
             };
           }).toList();
       debugPrint('✅ Top performing activities: ${topActivities.length}');
@@ -1041,23 +1034,23 @@ class CoordinatorService {
     return [
       {
         'name': 'Social Media',
-        'performance': 85 + Random().nextInt(15),
-        'metric': '${150 + Random().nextInt(100)} reach',
+        'performance': 0, // Real performance data would come from social media API
+        'metric': '0 reach', // Real metrics would come from social media analytics
       },
       {
         'name': 'Email',
-        'performance': 70 + Random().nextInt(20),
-        'metric': '${80 + Random().nextInt(60)} opens',
+        'performance': 0, // Real performance data would come from email analytics
+        'metric': '0 opens', // Real metrics would come from email service
       },
       {
         'name': 'WhatsApp',
-        'performance': 90 + Random().nextInt(10),
-        'metric': '${200 + Random().nextInt(150)} views',
+        'performance': 0, // Real performance data would come from WhatsApp analytics
+        'metric': '0 views', // Real metrics would come from WhatsApp service
       },
       {
         'name': 'Campus Flyers',
-        'performance': 60 + Random().nextInt(25),
-        'metric': '${30 + Random().nextInt(40)} views',
+        'performance': 0, // Real performance data would come from tracking system
+        'metric': '0 views', // Real metrics would come from tracking system
       },
     ];
   }

@@ -52,11 +52,13 @@ class AdminBottomNavBar extends StatelessWidget {
   }
 
   void _onTabTapped(BuildContext context, int index) {
+    print('🔥 ADMIN NAV: Tab $index tapped (current: $currentIndex)');
     // Don't navigate if already on the selected tab
     if (index == currentIndex) return;
 
     switch (index) {
       case 0:
+        print('🔥 ADMIN NAV: Navigating to dashboard');
         Navigator.pushNamedAndRemoveUntil(
           context,
           '/admin-dashboard',
@@ -64,6 +66,7 @@ class AdminBottomNavBar extends StatelessWidget {
         );
         break;
       case 1:
+        print('🔥 ADMIN NAV: Navigating to user management');
         Navigator.pushNamedAndRemoveUntil(
           context,
           '/admin/user-management',
@@ -71,6 +74,7 @@ class AdminBottomNavBar extends StatelessWidget {
         );
         break;
       case 2:
+        print('🔥 ADMIN NAV: Navigating to system reports');
         Navigator.pushNamedAndRemoveUntil(
           context,
           '/admin/system-reports',
@@ -78,6 +82,7 @@ class AdminBottomNavBar extends StatelessWidget {
         );
         break;
       case 3:
+        print('🔥 ADMIN NAV: Navigating to role management');
         Navigator.pushNamedAndRemoveUntil(
           context,
           '/admin/role-management',
@@ -85,6 +90,7 @@ class AdminBottomNavBar extends StatelessWidget {
         );
         break;
       case 4:
+        print('🔥 ADMIN NAV: Navigating to system settings');
         Navigator.pushNamedAndRemoveUntil(
           context,
           '/admin/system-settings',

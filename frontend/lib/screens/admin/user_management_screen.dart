@@ -300,6 +300,7 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                           final isActive = user['is_active'] ?? true;
                           final firstName =
                               user['first_name'] ?? user['full_name'] ?? 'U';
+                          final username = user['username'] ?? '';
 
                           return Card(
                             margin: const EdgeInsets.symmetric(
@@ -310,7 +311,11 @@ class _UserManagementScreenState extends State<UserManagementScreen> {
                               leading: CircleAvatar(
                                 backgroundColor: _getRoleColor(userRole),
                                 child: Text(
-                                  firstName.substring(0, 1).toUpperCase(),
+                                  firstName.isNotEmpty 
+                                    ? firstName.substring(0, 1).toUpperCase()
+                                    : username.isNotEmpty 
+                                      ? username.substring(0, 1).toUpperCase()
+                                      : '?',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,

@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:frontend/models/activity.dart';
 
 class AdminService {
-  static const String _baseUrl = 'http://localhost:8000/api';
+  static const String _baseUrl = 'http://127.0.0.1:8000/api';
 
   Future<Map<String, String>> _getHeaders() async {
     try {
@@ -24,18 +24,32 @@ class AdminService {
   // FIXED: Dashboard Statistics with fallback
   Future<Map<String, dynamic>> getDashboardStats() async {
     try {
+      print('🔧 ADMIN SERVICE: Getting dashboard stats...');
       final response = await http.get(
         Uri.parse('$_baseUrl/admin/dashboard/stats/'),
         headers: await _getHeaders(),
       );
+      
+      print('🔧 ADMIN SERVICE: Dashboard stats response status: ${response.statusCode}');
+      print('🔧 ADMIN SERVICE: Dashboard stats response body preview: ${response.body.substring(0, response.body.length > 100 ? 100 : response.body.length)}...');
+      
       if (response.statusCode == 200) {
-        return json.decode(response.body);
+        try {
+          final jsonData = json.decode(response.body);
+          print('🔧 ADMIN SERVICE: Dashboard stats parsed successfully');
+          return jsonData;
+        } catch (e) {
+          print('🔧 ADMIN SERVICE: JSON parse error for dashboard stats: $e');
+          print('🔧 ADMIN SERVICE: Raw response: ${response.body}');
+          return _getFallbackStats();
+        }
       } else {
-        print('Dashboard stats API failed: ${response.statusCode}');
+        print('🔧 ADMIN SERVICE: Dashboard stats API failed: ${response.statusCode}');
+        print('🔧 ADMIN SERVICE: Error response body: ${response.body}');
         return _getFallbackStats();
       }
     } catch (e) {
-      print('Error loading dashboard stats: $e');
+      print('🔧 ADMIN SERVICE: Error loading dashboard stats: $e');
       return _getFallbackStats();
     }
   }
@@ -163,6 +177,7 @@ class AdminService {
     String? statusFilter,
   }) async {
     try {
+      print('🔧 ADMIN SERVICE: Getting activities with pageSize: $pageSize');
       final queryParams = {
         'page': page.toString(),
         'page_size': pageSize.toString(),
@@ -174,7 +189,11 @@ class AdminService {
       final uri = Uri.parse(
         '$_baseUrl/activities/',
       ).replace(queryParameters: queryParams);
+      
+      print('🔧 ADMIN SERVICE: Activities URL: $uri');
       final response = await http.get(uri, headers: await _getHeaders());
+      
+      print('🔧 ADMIN SERVICE: Activities response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -191,6 +210,8 @@ class AdminService {
         } else {
           activitiesList = [];
         }
+
+        print('🔧 ADMIN SERVICE: Found ${activitiesList.length} activities');
 
         // FIXED: Safely convert to Activity objects
         if (activitiesList is List) {
@@ -216,10 +237,11 @@ class AdminService {
           return [];
         }
       } else {
+        print('🔧 ADMIN SERVICE: Activities API failed: ${response.statusCode} - ${response.body}');
         throw Exception('Failed to load activities: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error in getAllActivities: $e');
+      print('🔧 ADMIN SERVICE: Error in getAllActivities: $e');
       throw Exception('Error loading activities: $e');
     }
   }
@@ -446,6 +468,82 @@ class AdminService {
       return response.statusCode == 200;
     } catch (e) {
       return false;
+    }
+  }
+
+  // Get system statistics for reports
+  Future<Map<String, dynamic>> getSystemStats() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/admin/system-stats/'),
+        headers: await _getHeaders(),
+      );
+      
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        // Return default stats if API call fails
+        return {
+          'total_users': 0,
+          'active_users': 0,
+          'total_activities': 0,
+          'active_activities': 0,
+          'student_count': 0,
+          'coordinator_count': 0,
+          'instructor_count': 0,
+          'admin_count': 0,
+          'total_registrations': 0,
+          'monthly_registrations': 0,
+          'completion_rate': 0,
+          'average_rating': 0,
+          'email_service_status': 'healthy',
+        };
+      }
+    } catch (e) {
+      print('Error getting system stats: $e');
+      return {
+        'total_users': 0,
+        'active_users': 0,
+        'total_activities': 0,
+        'active_activities': 0,
+        'student_count': 0,
+        'coordinator_count': 0,
+        'instructor_count': 0,
+        'admin_count': 0,
+        'total_registrations': 0,
+        'monthly_registrations': 0,
+        'completion_rate': 0,
+        'average_rating': 0,
+        'email_service_status': 'error',
+      };
+    }
+  }
+
+  // Get recent activities for reports
+  Future<List<Map<String, dynamic>>> getRecentActivities({int limit = 10}) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$_baseUrl/admin/recent-activities/?limit=$limit'),
+        headers: await _getHeaders(),
+      );
+      
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // Handle both direct array response and nested object response
+        if (data is List) {
+          return List<Map<String, dynamic>>.from(data);
+        } else if (data is Map) {
+          final activities = data['activities'] ?? data['results'] ?? data;
+          return List<Map<String, dynamic>>.from(activities);
+        }
+        return [];
+      } else {
+        print('Recent activities API failed: ${response.statusCode}');
+        return [];
+      }
+    } catch (e) {
+      print('Error getting recent activities: $e');
+      return [];
     }
   }
 }

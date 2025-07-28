@@ -595,9 +595,9 @@ class _AdminActivitiesScreenState extends State<AdminActivitiesScreen>
                                           ? Colors.green
                                           : Colors.grey,
                                   child: Text(
-                                    participant.userName
-                                        .substring(0, 1)
-                                        .toUpperCase(),
+                                    (participant.userName.isNotEmpty)
+                                        ? participant.userName.substring(0, 1).toUpperCase()
+                                        : 'U',
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                 ),

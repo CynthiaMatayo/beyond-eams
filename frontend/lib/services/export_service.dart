@@ -1080,18 +1080,19 @@ class ExportService {
   /// Get export data from API with type safety
   static Future<Map<String, dynamic>> getExportData() async {
     try {
-      // Mock data for now - replace with actual API call
+      // TODO: Replace with actual API call to admin service
+      // For now, return zeros instead of fake numbers
       return {
-        'users': 127,
-        'activities': 30,
-        'registrations': 245,
-        'attendance_records': 180,
-        'volunteer_applications': 45, // Fixed: This is now an int, not string
-        'volunteering_hours': 855.5,
-        'total_notifications': 320,
-        'total_volunteer_hours': 855.5,
-        'active_users': 89,
-        'pending_applications': 12,
+        'users': 0,
+        'activities': 0,
+        'registrations': 0,
+        'attendance_records': 0,
+        'volunteer_applications': 0,
+        'volunteering_hours': 0.0,
+        'total_notifications': 0,
+        'total_volunteer_hours': 0.0,
+        'active_users': 0,
+        'pending_applications': 0,
         'last_updated': DateTime.now().toIso8601String(),
       };
     } catch (e) {

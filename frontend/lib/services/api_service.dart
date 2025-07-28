@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +24,8 @@ class ApiService {
 
   // Helper method to handle HTTP responses
   Future<Map<String, dynamic>> _handleResponse(http.Response response) async {
+    debugPrint('🌐 HTTP ${response.statusCode}: ${response.body}');
+    
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isNotEmpty) {
         return json.decode(response.body);
@@ -31,11 +34,21 @@ class ApiService {
     } else {
       final errorBody =
           response.body.isNotEmpty ? json.decode(response.body) : {};
-      throw Exception(
-        errorBody['message'] ??
-            errorBody['detail'] ??
-            'HTTP ${response.statusCode}',
-      );
+      
+      // Enhanced error message handling
+      String errorMessage = 'HTTP ${response.statusCode}';
+      if (errorBody['error'] != null) {
+        errorMessage = errorBody['error'];
+      } else if (errorBody['message'] != null) {
+        errorMessage = errorBody['message'];
+      } else if (errorBody['detail'] != null) {
+        errorMessage = errorBody['detail'];
+      } else if (errorBody['non_field_errors'] != null) {
+        errorMessage = errorBody['non_field_errors'][0];
+      }
+      
+      debugPrint('❌ API Error: $errorMessage');
+      throw Exception(errorMessage);
     }
   }
 
@@ -50,6 +63,7 @@ class ApiService {
   }
 
   Future<Map<String, dynamic>> register(
+    String username,
     String firstName,
     String lastName,
     String email,
@@ -59,6 +73,7 @@ class ApiService {
       Uri.parse('$baseUrl/api/auth/register/'),
       headers: await _getHeaders(includeAuth: false),
       body: json.encode({
+        'username': username,
         'first_name': firstName,
         'last_name': lastName,
         'email': email,

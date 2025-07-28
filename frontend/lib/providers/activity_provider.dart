@@ -360,8 +360,8 @@ Future<void> loadActivities() async {
     _clearError();
 
     try {
-      // FIXED: Call getAllActivities instead of getActivitiesWithEnrollmentStatus
-      final response = await ActivityService.getAllActivities();
+      // FIXED: Call getActivitiesWithEnrollmentStatus for student browse activities
+      final response = await ActivityService.getActivitiesWithEnrollmentStatus();
 
       if (response['success']) {
         final List<dynamic> activitiesData = response['data'] as List<dynamic>;

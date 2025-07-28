@@ -6,13 +6,13 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/foundation.dart';
 
 class VolunteerService {
-  static const String _baseUrl = 'http://your-api-url.com/api';
+  static const String _baseUrl = 'http://127.0.0.1:8000/api';
 
   // Helper method to get authentication token (same as NotificationService)
   static Future<String?> _getAuthToken() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      return prefs.getString('auth_token') ?? 
+      return prefs.getString('access_token') ?? 
              prefs.getString('access_token') ??
              prefs.getString('token') ??
              prefs.getString('jwt_token');

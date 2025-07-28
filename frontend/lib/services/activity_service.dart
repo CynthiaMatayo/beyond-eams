@@ -7,8 +7,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/activity.dart';
 
 class ActivityService {
-  // ✅ FIXED: Correct base URL - remove duplicate /api/
-  static const String baseUrl = 'http://127.0.0.1:8000/api/activities';
+  // ✅ FIXED: Correct base URL - remove /activities to avoid double path
+  static const String baseUrl = 'http://127.0.0.1:8000/api';
   static const Duration timeoutDuration = Duration(seconds: 15);
 
   // Helper method to get authentication token
@@ -151,7 +151,7 @@ class ActivityService {
     try {
       // ✅ FIXED: Use correct endpoint - remove duplicate api/
       final url = '$baseUrl/coordinator/activities/';
-      debugPrint('🔍 CALLING URL: $url');
+      debugPrint('🔍 ACTIVITY_SERVICE getAllActivities URL: $url');
       final headers = await _getHeaders();
       final response = await http
           .get(Uri.parse(url), headers: headers)
@@ -193,9 +193,9 @@ class ActivityService {
     try {
       userId ??= await _getCurrentUserId();
 
-      // ✅ FIXED: Use activities endpoint, not coordinator
+      // ✅ FIXED: Correct URL should be /api/activities/ (not double activities)
       final url = '$baseUrl/activities/?user_id=$userId';
-      debugPrint('🔍 ACTIVITIES WITH ENROLLMENT URL: $url');
+      debugPrint('🔍 ACTIVITY_SERVICE getActivitiesWithEnrollmentStatus URL: $url');
 
       final headers = await _getHeaders();
       final response = await http
@@ -241,7 +241,8 @@ class ActivityService {
         debugPrint(
           '✅ Successfully parsed ${activities.length} activities with enrollment status',
         );
-        return {'success': true, 'data': activities};
+        // Return the raw JSON data, not Activity objects, so the provider can handle parsing
+        return {'success': true, 'data': activitiesJson};
       }
 
       return result;
@@ -273,7 +274,7 @@ class ActivityService {
           },
         };
       }
-      // ✅ FIXED: Correct endpoint pattern
+      // ✅ FIXED: Correct endpoint pattern - remove /activities/ prefix
       final url = '$baseUrl/student-enrolled/?user_id=$userId';
       debugPrint('🔍 ENROLLED ACTIVITIES URL: $url');
       final headers = await _getHeaders(requireAuth: false);
