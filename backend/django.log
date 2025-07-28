@@ -7170,3 +7170,4 @@ INFO 2025-07-28 12:25:51,375 basehttp 10356 25628 "GET /api/student-volunteer-ap
 INFO 2025-07-28 12:25:51,439 basehttp 10356 21300 "GET /api/coordinator/stats/ HTTP/1.1" 200 112
 INFO 2025-07-28 12:25:51,441 basehttp 10356 30384 "GET /api/coordinator/categories/ HTTP/1.1" 200 477
 INFO 2025-07-28 12:25:51,447 basehttp 10356 3884 "GET /api/coordinator/activities/ HTTP/1.1" 200 2540
+INFO 2025-07-28 13:34:23,415 autoreload 19424 14556 Watching for file changes with StatReloader
